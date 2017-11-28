@@ -19,10 +19,43 @@
             <groupId>javax.servlet</groupId>
             <artifactId>jstl</artifactId>
         </dependency>
-
-
+        <!-- mybatis-spring -->
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis-spring</artifactId>
+        </dependency>
+        <!-- dbcp -->
+        <dependency>
+            <groupId>commons-dbcp</groupId>
+            <artifactId>commons-dbcp</artifactId>
+        </dependency>
     </dependencies>
     <build>
         <finalName>com.shihu.server</finalName>
+        <!-- 当filtering开关打开时，使用到的过滤器属性文件列表 -->
+        <filters>
+            <filter>config/common.properties</filter>
+            <filter>config/${build.profile.id}/config.properties</filter>
+        </filters>
+        <!-- 项目相关的所有资源路径列表（属性文件等），这些资源被包含在最终的打包文件里 -->
+        <resources>
+            <!-- 项目相关或测试相关的所有资源路径 -->
+            <resource>
+                <!-- 描述存放资源的目录，相对POM路径 -->
+                <directory>${basedir}/src/main/java</directory>
+                <!-- 排除的模式列表，所有java文件 -->
+                <excludes>
+                    <exclude>**/*.java</exclude>
+                </excludes>
+                <includes>
+                    <include>**/*.dic</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <!-- 处理文件变量替换 -->
+                <filtering>true</filtering>
+            </resource>
+        </resources>
     </build>
 </project>

@@ -10,13 +10,23 @@
     <version>1.0-SNAPSHOT</version>
     <properties>
         <shihu.webfront.version>1.0-SNAPSHOT</shihu.webfront.version>
+        <shihu.client.version>1.0-SNAPSHOT</shihu.client.version>
+        <shihu.repository.version>1.0-SNAPSHOT</shihu.repository.version>
 
         <!--  spring  -->
         <spring.version>4.2.4.RELEASE</spring.version>
-
-
         <!-- jetty -->
         <jstl.version>1.2</jstl.version>
+        <!-- mysql -->
+        <mysql.version>5.1.38</mysql.version>
+        <!-- mybatis -->
+        <mybatis.version>3.2.7</mybatis.version>
+        <mybatis-spring.version>1.2.4</mybatis-spring.version>
+        <!-- jetty -->
+        <jstl.version>1.2</jstl.version>
+
+
+        <commons-dbcp.version>1.4</commons-dbcp.version>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -25,6 +35,18 @@
                 <artifactId>com.shihu.webfront</artifactId>
                 <version>${shihu.webfront.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.shihu</groupId>
+                <artifactId>com.shihu.client</artifactId>
+                <version>${shihu.client.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.shihu</groupId>
+                <artifactId>com.shihu.repository</artifactId>
+                <version>${shihu.repository.version}</version>
+            </dependency>
+
+
             <!--   =================Spring=================   -->
             <dependency>
                 <groupId>org.springframework</groupId>
@@ -87,6 +109,35 @@
                 <version>${spring.version}</version>
             </dependency>
 
+            <!-- mybatis-spring -->
+            <dependency>
+                <groupId>org.mybatis</groupId>
+                <artifactId>mybatis-spring</artifactId>
+                <version>${mybatis-spring.version}</version>
+            </dependency>
+
+            <!-- =================Mybatis================= -->
+            <dependency>
+                <groupId>org.mybatis</groupId>
+                <artifactId>mybatis</artifactId>
+                <version>${mybatis.version}</version>
+            </dependency>
+
+
+            <!-- mysql driver -->
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>${mysql.version}</version>
+            </dependency>
+
+
+            <!-- dbcp -->
+            <dependency>
+                <groupId>commons-dbcp</groupId>
+                <artifactId>commons-dbcp</artifactId>
+                <version>${commons-dbcp.version}</version>
+            </dependency>
 
             <dependency>
                 <groupId>javax.servlet</groupId>
@@ -96,4 +147,22 @@
         </dependencies>
     </dependencyManagement>
 
+    <profiles> <!-- env -->
+        <!-- 使用config-<id>.properties来替换 设置过虑的资源文件中的${key}  -->
+        <profile>
+            <id>online</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <build.profile.id>online</build.profile.id>
+            </properties>
+        </profile>
+        <profile>
+            <id>test</id>
+            <properties>
+                <build.profile.id>test</build.profile.id>
+            </properties>
+        </profile>
+    </profiles>
 </project>

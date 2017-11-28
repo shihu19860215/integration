@@ -13,6 +13,13 @@
 
     <dependencies>
         <dependency>
+            <groupId>com.shihu</groupId>
+            <artifactId>com.shihu.repository</artifactId>
+        </dependency>
+
+
+        <!--  spring-->
+        <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-core</artifactId>
         </dependency>

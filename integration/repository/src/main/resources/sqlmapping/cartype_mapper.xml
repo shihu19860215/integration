@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shihu.mybatis.dao.CarTypeDao">
+	<select id="getCarTypeVO" parameterType="int" resultType="com.shihu.model.common.VO.CarTypeVO">
+		select * from cartype where id=#{id}
+	</select>
+	<insert id="addCarTypeVO" parameterType="com.shihu.model.common.VO.CarTypeVO">
+        insert into cartype(name) values(#{name})
+	</insert>
+	<update id="updateCarTypeVO" parameterType="com.shihu.model.common.VO.CarTypeVO">
+		update cartype set name=#{name} where id=#{id}
+	</update>
+	<delete id="deleteCarTypeVO" parameterType="int">
+		delete from cartype where id=#{id}
+	</delete>
+	<select id="getAllCarTypeVO" resultType="com.shihu.model.common.VO.CarTypeVO">
+		select * from cartype
+	</select>
+</mapper>
