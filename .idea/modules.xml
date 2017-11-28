@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/integration/integration.iml" filepath="$PROJECT_DIR$/integration/integration.iml" />
+      <module fileurl="file://$PROJECT_DIR$/root/root.iml" filepath="$PROJECT_DIR$/root/root.iml" />
+      <module fileurl="file://$PROJECT_DIR$/integration/server/server.iml" filepath="$PROJECT_DIR$/integration/server/server.iml" />
+      <module fileurl="file://$PROJECT_DIR$/integration/webfront/webfront.iml" filepath="$PROJECT_DIR$/integration/webfront/webfront.iml" />
+    </modules>
+  </component>
+</project>
