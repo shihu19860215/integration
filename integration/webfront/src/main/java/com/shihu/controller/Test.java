@@ -11,16 +11,10 @@ import java.util.List;
 @Controller
 @RequestMapping("/test")
 public class Test {
-    @Autowired
-    private CarTypeDao carTypeDao;
 
     @RequestMapping("test1")
     public String test1(){
-        List<CarTypeVO> list=carTypeDao.getAllCarTypeVO();
-        for(CarTypeVO c:list){
-            System.out.println(c.getName());
-        }
-        return "hello";
+        return "homepage";
     }
 
 }

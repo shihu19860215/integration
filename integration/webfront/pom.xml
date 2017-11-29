@@ -14,7 +14,7 @@
     <dependencies>
         <dependency>
             <groupId>com.shihu</groupId>
-            <artifactId>com.shihu.repository</artifactId>
+            <artifactId>com.shihu.biz</artifactId>
         </dependency>
 
 

@@ -10,11 +10,14 @@
           <element id="archive" name="com.shihu.webfront-1.0-SNAPSHOT.jar">
             <element id="module-output" name="webfront" />
           </element>
-          <element id="archive" name="com.shihu.repository-1.0-SNAPSHOT.jar">
-            <element id="module-output" name="repository" />
+          <element id="archive" name="com.shihu.biz-1.0-SNAPSHOT.jar">
+            <element id="module-output" name="biz" />
           </element>
           <element id="archive" name="com.shihu.client-1.0-SNAPSHOT.jar">
             <element id="module-output" name="client" />
+          </element>
+          <element id="archive" name="com.shihu.repository-1.0-SNAPSHOT.jar">
+            <element id="module-output" name="repository" />
           </element>
           <element id="library" level="project" name="Maven: mysql:mysql-connector-java:5.1.38" />
           <element id="library" level="project" name="Maven: org.mybatis:mybatis:3.2.7" />

@@ -12,6 +12,8 @@
         <shihu.webfront.version>1.0-SNAPSHOT</shihu.webfront.version>
         <shihu.client.version>1.0-SNAPSHOT</shihu.client.version>
         <shihu.repository.version>1.0-SNAPSHOT</shihu.repository.version>
+        <shihu.biz.version>1.0-SNAPSHOT</shihu.biz.version>
+
 
         <!--  spring  -->
         <spring.version>4.2.4.RELEASE</spring.version>
@@ -44,6 +46,11 @@
                 <groupId>com.shihu</groupId>
                 <artifactId>com.shihu.repository</artifactId>
                 <version>${shihu.repository.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.shihu</groupId>
+                <artifactId>com.shihu.biz</artifactId>
+                <version>${shihu.biz.version}</version>
             </dependency>
 
 

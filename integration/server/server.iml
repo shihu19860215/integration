@@ -26,8 +26,9 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="webfront" />
-    <orderEntry type="module" module-name="repository" />
+    <orderEntry type="module" module-name="biz" />
     <orderEntry type="module" module-name="client" />
+    <orderEntry type="module" module-name="repository" />
     <orderEntry type="library" name="Maven: mysql:mysql-connector-java:5.1.38" level="project" />
     <orderEntry type="library" name="Maven: org.mybatis:mybatis:3.2.7" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-core:4.2.4.RELEASE" level="project" />
