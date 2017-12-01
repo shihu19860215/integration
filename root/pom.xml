@@ -17,8 +17,6 @@
 
         <!--  spring  -->
         <spring.version>4.2.4.RELEASE</spring.version>
-        <!-- jetty -->
-        <jstl.version>1.2</jstl.version>
         <!-- mysql -->
         <mysql.version>5.1.38</mysql.version>
         <!-- mybatis -->
@@ -27,6 +25,7 @@
         <!-- jetty -->
         <jstl.version>1.2</jstl.version>
 
+        <servlet-api.version>3.1.0</servlet-api.version>
 
         <commons-dbcp.version>1.4</commons-dbcp.version>
     </properties>
@@ -146,6 +145,11 @@
                 <version>${commons-dbcp.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>javax.servlet</groupId>
+                <artifactId>javax.servlet-api</artifactId>
+                <version>${servlet-api.version}</version>
+            </dependency>
             <dependency>
                 <groupId>javax.servlet</groupId>
                 <artifactId>jstl</artifactId>
