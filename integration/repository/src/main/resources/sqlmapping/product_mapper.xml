@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shihu.mybatis.dao.ProductDao">
+	<select id="getProductVOByCarId" parameterType="long" resultType="com.shihu.model.common.VO.ProductVO">
+		select * from product as p join car_product as cp on p.id=cp.productid where cp.carid=#{id};
+	</select>
+	<select id="getProductVOById" parameterType="long" resultType="com.shihu.model.common.VO.ProductVO">
+		select * from product where id=#{id};
+	</select>
+	<update id="updateProdectNumById" parameterType="com.shihu.model.common.VO.ProductVO">
+		update product set num=#{num} where id=#{id}
+	</update>
+	<insert id="addProduct" parameterType="com.shihu.model.common.VO.ProductVO" useGeneratedKeys="true" keyProperty="id">
+		insert into product(name,num,version,ownerprice,otherprice,remark,carstr)
+		 values(#{name},#{num},#{version},#{ownerprice},#{otherprice},#{remark},#{carStr})
+	</insert>
+	<update id="updateProdect" parameterType="com.shihu.model.common.VO.ProductVO">
+		update product set name=#{name},num=#{num},version=#{version},ownerprice=#{ownerprice}
+		,otherprice=#{otherprice},remark=#{remark},carStr=#{carStr} where id=#{id}
+	</update>
+	<delete id="delProduct" parameterType="long">
+		delete from product where id=#{id}
+	</delete>
+
+
+
+
+
+
+
+
+
+
+
+
+	<!-- 修改数据库增加carstr字段-->
+	<select id="getCarsByProductId" parameterType="long" resultType="com.shihu.model.common.VO.CarVO">
+		select c.* from car as c join car_product as cp on c.id=cp.carid where cp.productid=#{id};
+	</select>
+	<select id="getPruduct" resultType="com.shihu.model.common.VO.ProductVO">
+		select * from product;
+	</select>
+	<update id="updateP" parameterType="com.shihu.model.common.VO.ProductVO">
+		update product set carstr=#{carStr} where id=#{id}
+	</update>
+	<!-- 修改数据库增加carstr字段-->
+</mapper>

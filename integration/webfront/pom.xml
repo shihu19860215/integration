@@ -16,7 +16,15 @@
             <groupId>com.shihu</groupId>
             <artifactId>com.shihu.biz</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.shihu</groupId>
+            <artifactId>com.shihu.client</artifactId>
+        </dependency>
 
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+        </dependency>
 
         <!--  spring-->
         <dependency>

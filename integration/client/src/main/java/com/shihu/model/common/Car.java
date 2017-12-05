@@ -1,5 +1,7 @@
 package com.shihu.model.common;
 
+import com.shihu.model.common.VO.CarVO;
+
 import java.util.Set;
 
 public class Car {
@@ -7,6 +9,14 @@ public class Car {
 	private String name;
 	private CarType carType;
 	private Set<Product> products;
+
+	public Car() {
+	}
+
+	public Car(CarVO carVO) {
+		this.id = carVO.getId();
+		this.name =carVO.getName();
+	}
 
 	public Long getId() {
 		return id;

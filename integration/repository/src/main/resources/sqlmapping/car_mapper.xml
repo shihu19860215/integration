@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shihu.mybatis.dao.CarDao">
+	<delete id="deleteCarById" parameterType="long">
+		delete from car where id=#{id}
+	</delete>
+	<insert id="addCarVO" parameterType="com.shihu.model.common.VO.CarVO" useGeneratedKeys="true" keyProperty="id">
+		insert into car(name,cartypeid) values(#{name},#{carTypeId})
+	</insert>
+	<select id="getCarVOListByCarTypeId" parameterType="long" resultType="com.shihu.model.common.VO.CarVO">
+		select * from car where cartypeid=#{id}
+	</select>
+	<select id="getCarVOById" parameterType="long" resultType="com.shihu.model.common.VO.CarVO">
+		select * from car where id=#{id}
+	</select>
+	<select id="getCarVO" resultType="com.shihu.model.common.VO.CarVO">
+		select * from car
+	</select>
+	<select id="getCarVOByName" parameterType="string" resultType="com.shihu.model.common.VO.CarVO">
+		select * from car where name=#{name}
+	</select>
+	<select id="getCarVOListLikeName" parameterType="java.util.Map" resultType="com.shihu.model.common.VO.CarVO">
+		select * from car where name like #{name} and cartypeid=#{carTypeId}
+	</select>
+
+
+</mapper>

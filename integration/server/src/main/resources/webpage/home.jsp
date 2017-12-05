@@ -49,15 +49,15 @@
                     <c:choose>
                         <c:when test="${null!=user}">
                             <a href="#" id="drop3" role="button" class="dropdown-toggle" data-toggle="dropdown">
-                                <i class="icon-user"></i> ${user}
+                                <i class="icon-user"></i> ${user.username}
                                 <i class="icon-caret-down"></i>
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a tabindex="-1" href="login_loginOut">Logout</a></li>
+                                <li><a tabindex="-1" href="/loginout">Logout</a></li>
                             </ul>
                         </c:when>
                         <c:otherwise>
-                            <a href="sign-in.jsp" id="drop3" role="button" class="dropdown-toggle">
+                            <a href="/login" id="drop3" role="button" class="dropdown-toggle">
                                 <i class="icon-user"></i>登陆
                             </a>
 
@@ -80,7 +80,7 @@
                 <div class="nav-header" data-toggle="collapse" data-target="#dashboard-menu"><i class="icon-dashboard"></i>汽车用品</div>
                 <ul id="dashboard-menu" class="nav nav-list collapse in">
 
-                    <li <c:if test="${page.index==1}">class="active"</c:if> > <a href="carType">品牌车型</a></li>
+                    <li <c:if test="${page.index==1}">class="active"</c:if> > <a href="/cartype/list">品牌车型</a></li>
 
                     <li <c:if test="${page.index==2}">class="active"</c:if> ><a href="productSerach">商品搜索</a></li>
 
@@ -93,11 +93,11 @@
 
 
                     <c:choose>
-                        <c:when test="${null!=user}">
-                            <li ><a href="sign-in.jsp">登陆</a></li>
+                        <c:when test="${null==user}">
+                            <li ><a href="/login">登陆</a></li>
                         </c:when>
                         <c:otherwise>
-                            <li ><a href="sign-in.jsp">登出</a></li>
+                            <li ><a href="/loginout">登出</a></li>
                         </c:otherwise>
                     </c:choose>
 
@@ -107,8 +107,7 @@
             </div>
         </div>
         <div class="span9">
-
-            <jsp:include page="cartype.jsp"></jsp:include>
+            <jsp:include page="${page.includePage}.jsp"></jsp:include>
 
 
 

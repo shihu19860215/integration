@@ -1,17 +1,18 @@
 package com.shihu.model.common.VO;
 
-import com.shihu.model.common.Car;
+import com.shihu.base.Base;
 
-import java.util.Set;
+import java.util.List;
 
 public class ProductVO {
 	private Long id;
 	private String name;
 	private int num;
 	private String version;
-	private int ownerprice;
-	private int otherprice;
+	private Integer ownerprice;
+	private Integer otherprice;
 	private String remark;
+	private String carStr;
 
 	public Long getId() {
 		return id;
@@ -45,19 +46,19 @@ public class ProductVO {
 		this.version = version;
 	}
 
-	public int getOwnerprice() {
+	public Integer getOwnerprice() {
 		return ownerprice;
 	}
 
-	public void setOwnerprice(int ownerprice) {
+	public void setOwnerprice(Integer ownerprice) {
 		this.ownerprice = ownerprice;
 	}
 
-	public int getOtherprice() {
+	public Integer getOtherprice() {
 		return otherprice;
 	}
 
-	public void setOtherprice(int otherprice) {
+	public void setOtherprice(Integer otherprice) {
 		this.otherprice = otherprice;
 	}
 
@@ -67,5 +68,17 @@ public class ProductVO {
 
 	public void setRemark(String remark) {
 		this.remark = remark;
+	}
+
+	public String getCarStr() {
+		return carStr;
+	}
+
+	public void setCarStr(String carStr) {
+		this.carStr = carStr;
+	}
+
+	public void setCarStr(List<CarVO> cars) {
+		this.carStr = Base.gson.toJson(cars);
 	}
 }

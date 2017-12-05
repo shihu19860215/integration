@@ -1,11 +1,26 @@
 package com.shihu.model.common;
 
+import com.shihu.model.common.VO.CarTypeVO;
+import com.shihu.model.common.VO.CarVO;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 public class CarType {
 	private Long id;
 	private String name;
-	private Set<Car> cars;
+	private List<CarVO> carVOs;
+
+
+	public CarType() {
+	}
+
+	public CarType(CarTypeVO carTypeVO, List<CarVO> carVOs) {
+		this.id = carTypeVO.getId();
+		this.name=carTypeVO.getName();
+		this.carVOs=carVOs;
+	}
 
 	public Long getId() {
 		return id;
@@ -23,11 +38,12 @@ public class CarType {
 		this.name = name;
 	}
 
-	public Set<Car> getCars() {
-		return cars;
+	public List<CarVO> getCarVOs() {
+		return carVOs;
 	}
 
-	public void setCars(Set<Car> cars) {
-		this.cars = cars;
+	public CarType setCarVOs(List<CarVO> carVOs) {
+		this.carVOs = carVOs;
+		return this;
 	}
 }

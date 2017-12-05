@@ -1,16 +1,39 @@
 package com.shihu.model.common;
 
-import java.util.Set;
+import com.google.gson.reflect.TypeToken;
+import com.shihu.base.Base;
+import com.shihu.model.common.VO.CarVO;
+import com.shihu.model.common.VO.ProductVO;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Product {
 	private Long id;
 	private String name;
 	private int num;
 	private String version;
-	private int ownerprice;
-	private int otherprice;
+	private Integer ownerprice;
+	private Integer otherprice;
 	private String remark;
-	private Set<Car> cars;
+	private List<CarVO> carVOs;
+
+	public Product() {
+	}
+	public Product(ProductVO productVO) {
+		this.id=productVO.getId();
+		this.name=productVO.getName();
+		this.num=productVO.getNum();
+		this.version=productVO.getVersion();
+		this.ownerprice=productVO.getOwnerprice();
+		this.otherprice=productVO.getOtherprice();
+		this.remark=productVO.getRemark();
+		if(null!=productVO.getCarStr()&&productVO.getCarStr().length()>0){
+			Type t=new TypeToken<ArrayList<CarVO>>(){}.getType();
+			this.carVOs= Base.gson.fromJson(productVO.getCarStr(),t);
+		}
+	}
 
 	public Long getId() {
 		return id;
@@ -44,19 +67,19 @@ public class Product {
 		this.version = version;
 	}
 
-	public int getOwnerprice() {
+	public Integer getOwnerprice() {
 		return ownerprice;
 	}
 
-	public void setOwnerprice(int ownerprice) {
+	public void setOwnerprice(Integer ownerprice) {
 		this.ownerprice = ownerprice;
 	}
 
-	public int getOtherprice() {
+	public Integer getOtherprice() {
 		return otherprice;
 	}
 
-	public void setOtherprice(int otherprice) {
+	public void setOtherprice(Integer otherprice) {
 		this.otherprice = otherprice;
 	}
 
@@ -68,11 +91,12 @@ public class Product {
 		this.remark = remark;
 	}
 
-	public Set<Car> getCars() {
-		return cars;
+	public List<CarVO> getCarVOs() {
+		return carVOs;
 	}
 
-	public void setCars(Set<Car> cars) {
-		this.cars = cars;
+	public void setCarVOs(List<CarVO> carVOs) {
+		this.carVOs = carVOs;
 	}
+
 }

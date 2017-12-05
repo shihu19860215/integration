@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shihu.mybatis.dao.CarProductDao">
+	<insert id="addCarProductVO" parameterType="com.shihu.model.common.VO.CarProductVO">
+		insert into car_product(carid,productId)
+		values(#{carId},#{productId})
+	</insert>
+	<delete id="delCarProductVO" parameterType="com.shihu.model.common.VO.CarProductVO">
+		delete from car_product where carid=#{carId} and productid=#{productId}
+	</delete>
+	<select id="getCountByCarId" parameterType="long" resultType="int">
+		select count(*) from car_product where carid=#{carId}
+	</select>
+
+
+
+
+
+
+
+
+
+
+</mapper>
