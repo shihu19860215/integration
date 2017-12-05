@@ -20,6 +20,7 @@ public interface ProductService {
     @Transactional
     public void updateProduct(ProductVO productVO,Long[] carIds,Long carId);
     public void delProduct(Long id);
+    public List<Product> searchProduct(String carName,String productName,String productVersion,String sort);
 
 
 

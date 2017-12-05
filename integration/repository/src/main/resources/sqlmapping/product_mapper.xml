@@ -28,14 +28,41 @@
 		<if test="carName!=null">
 			and c.name like #{carName}
 		</if>
-		<if test="deptNo!=null">
-			and p.name like #{productName}'
+		<if test="productName!=null">
+			and p.name like #{productName}
 		</if>
-		<if test="deptNo!=null">
+		<if test="version!=null">
 			and p.version like #{version}
-		</if>' ||
-		'order by
-%';
+		</if>
+		<if test="sort!= null" >
+			order by
+			<choose>
+				<when test="sort == 'cNameAsc'">
+					convert(c.name using gbk) asc,convert(p.name using gbk) asc,convert(p.version using gbk) asc,p.num asc
+				</when>
+				<when test="sort == 'cNameDesc'">
+					convert(c.name using gbk) desc,convert(p.name using gbk) asc,convert(p.version using gbk) asc,p.num asc
+				</when>
+				<when test="sort == 'pNameAsc'">
+					convert(p.name using gbk) asc,convert(c.name using gbk) asc,convert(p.version using gbk) asc,p.num asc
+				</when>
+				<when test="sort == 'pNameDesc'">
+					convert(p.name using gbk) desc,convert(c.name using gbk) asc,convert(p.version using gbk) asc,p.num asc
+				</when>
+				<when test="sort == 'pNumAsc'">
+					p.num asc,convert(c.name using gbk) asc,convert(p.name using gbk) asc,convert(p.version using gbk) asc
+				</when>
+				<when test="sort == 'pNumDesc'">
+					p.num desc,convert(c.name using gbk) asc,convert(p.name using gbk) asc,convert(p.version using gbk) asc
+				</when>
+				<when test="sort == 'pVersionAsc'">
+					convert(p.version using gbk) asc,convert(c.name using gbk) asc,convert(p.name using gbk) asc,p.num asc
+				</when>
+				<when test="sort == 'pVersionDesc'">
+					convert(p.version using gbk) desc,convert(c.name using gbk) asc,convert(p.name using gbk) asc,p.num asc
+				</when>
+			</choose>
+		</if>
 	</select>
 
 

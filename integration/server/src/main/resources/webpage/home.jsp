@@ -82,7 +82,7 @@
 
                     <li <c:if test="${page.index==1}">class="active"</c:if> > <a href="/cartype/list">品牌车型</a></li>
 
-                    <li <c:if test="${page.index==2}">class="active"</c:if> ><a href="productSerach">商品搜索</a></li>
+                    <li <c:if test="${page.index==2}">class="active"</c:if> ><a href="/search/product">商品搜索</a></li>
 
 
 

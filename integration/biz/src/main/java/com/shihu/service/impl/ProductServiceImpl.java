@@ -17,7 +17,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ProductServiceImpl implements ProductService{
@@ -137,6 +139,34 @@ public class ProductServiceImpl implements ProductService{
         productDao.delProduct(id);
     }
 
+    public List<Product> searchProduct(String carName,String productName,String productVersion,String sort){
+        Map<String,String> map=new HashMap<String,String>();
+        if(null!=carName&&carName.length()>0){
+            map.put("carName","%"+carName+"%");
+        }
+        if(null!=productName&&productName.length()>0){
+            map.put("productName","%"+productName+"%");
+        }
+        if(null!=productVersion&&productVersion.length()>0){
+            map.put("version","%"+productVersion+"%");
+        }
+        if(null!=sort&&sort.length()>0){
+            map.put("sort",sort);
+        }
+        List<ProductVO> productVOs= productDao.searchProduct(map);
+        return productListToProductVOList(productVOs);
+    }
+
+    private List<Product> productListToProductVOList(List<ProductVO> productVOs){
+        List<Product> list=null;
+        if(null!=productVOs&&productVOs.size()>0){
+            list=new ArrayList<Product>(productVOs.size());
+            for(ProductVO p:productVOs){
+                list.add(new Product(p));
+            }
+        }
+        return  list;
+    }
 
 
     /*修改数据库增加carstr字段*/
