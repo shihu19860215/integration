@@ -8,6 +8,7 @@ import com.shihu.model.common.VO.ProductVO;
 import com.shihu.model.common.VO.UserVO;
 
 import java.util.List;
+import java.util.Map;
 
 public interface ProductDao {
     public List<ProductVO> getProductVOByCarId(Long carId);
@@ -16,6 +17,7 @@ public interface ProductDao {
     public void addProduct(ProductVO productVO);
     public void updateProdect(ProductVO productVO);
     public void delProduct(Long id);
+    public List<ProductVO> searchProduct(Map<String,Object> map);
 
     /*修改数据库增加carstr字段*/
     List<CarVO> getCarsByProductId(Long productId);

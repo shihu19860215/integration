@@ -21,6 +21,22 @@
 	<delete id="delProduct" parameterType="long">
 		delete from product where id=#{id}
 	</delete>
+	<select id="searchProduct" parameterType="java.util.Map" resultType="com.shihu.model.common.VO.ProductVO">
+		select * from product as p
+			join car_product as cp on p.id=cp.productid
+			join car as c on c.id=cp.carid where 1=1
+		<if test="carName!=null">
+			and c.name like #{carName}
+		</if>
+		<if test="deptNo!=null">
+			and p.name like #{productName}'
+		</if>
+		<if test="deptNo!=null">
+			and p.version like #{version}
+		</if>' ||
+		'order by
+%';
+	</select>
 
 
 
