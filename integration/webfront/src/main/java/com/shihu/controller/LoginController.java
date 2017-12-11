@@ -19,7 +19,7 @@ public class LoginController {
     @RequestMapping("/login")
     public ModelAndView login(HttpSession session,User user){
         ModelAndView modelAndView=new ModelAndView();
-        Object o=session.getAttribute("usr");
+        Object o=session.getAttribute("user");
         if(null!=o){
             modelAndView.setViewName("redirect:/home");
         }else {

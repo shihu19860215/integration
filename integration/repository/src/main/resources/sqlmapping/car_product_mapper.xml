@@ -11,6 +11,15 @@
 	<select id="getCountByCarId" parameterType="long" resultType="int">
 		select count(*) from car_product where carid=#{carId}
 	</select>
+	<update id="updateCarProduct" parameterType="com.shihu.model.common.VO.CarProductUpdateVO">
+		update product set carId=#{carId} productId=#{productId} where carIdOld=#{carIdOld} productIdOld=#{productIdOld}
+	</update>
+	<delete id="delCarProductVOByProductId" parameterType="long">
+		delete from car_product where id in
+		(select a.id from (select cp.id from car_product as cp join product p on cp.productId=p.id where p.id=#{id}) a);
+	</delete>
+
+
 
 
 

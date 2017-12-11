@@ -2,29 +2,32 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.shihu.mybatis.dao.ProductDao">
 	<select id="getProductVOByCarId" parameterType="long" resultType="com.shihu.model.common.VO.ProductVO">
-		select * from product as p join car_product as cp on p.id=cp.productid where cp.carid=#{id};
+		select * from product as p join car_product as cp on p.id=cp.productid where cp.carid=#{id} and display=TRUE
 	</select>
 	<select id="getProductVOById" parameterType="long" resultType="com.shihu.model.common.VO.ProductVO">
-		select * from product where id=#{id};
+		select * from product where id=#{id}
+	</select>
+	<select id="getDisplayProductVOById" parameterType="long" resultType="com.shihu.model.common.VO.ProductVO">
+		select * from product where id=#{id} and display=true
 	</select>
 	<update id="updateProdectNumById" parameterType="com.shihu.model.common.VO.ProductVO">
 		update product set num=#{num} where id=#{id}
 	</update>
 	<insert id="addProduct" parameterType="com.shihu.model.common.VO.ProductVO" useGeneratedKeys="true" keyProperty="id">
-		insert into product(name,num,version,ownerprice,otherprice,remark,carstr)
-		 values(#{name},#{num},#{version},#{ownerprice},#{otherprice},#{remark},#{carStr})
+		insert into product(name,num,version,ownerprice,otherprice,remark,carstr,display)
+		 values(#{name},#{num},#{version},#{ownerprice},#{otherprice},#{remark},#{carStr},TRUE )
 	</insert>
 	<update id="updateProdect" parameterType="com.shihu.model.common.VO.ProductVO">
 		update product set name=#{name},num=#{num},version=#{version},ownerprice=#{ownerprice}
 		,otherprice=#{otherprice},remark=#{remark},carStr=#{carStr} where id=#{id}
 	</update>
-	<delete id="delProduct" parameterType="long">
-		delete from product where id=#{id}
-	</delete>
+	<update id="noDisplayProduct" parameterType="long">
+		update product set display=FALSE where id=#{id}
+	</update>
 	<select id="searchProduct" parameterType="java.util.Map" resultType="com.shihu.model.common.VO.ProductVO">
-		select * from product as p
+		select p.* from product as p
 			join car_product as cp on p.id=cp.productid
-			join car as c on c.id=cp.carid where 1=1
+			join car as c on c.id=cp.carid where display=TRUE
 		<if test="carName!=null">
 			and c.name like #{carName}
 		</if>
@@ -34,6 +37,7 @@
 		<if test="version!=null">
 			and p.version like #{version}
 		</if>
+		group by p.id
 		<if test="sort!= null" >
 			order by
 			<choose>

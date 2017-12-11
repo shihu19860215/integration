@@ -83,7 +83,10 @@
                     <li <c:if test="${page.index==1}">class="active"</c:if> > <a href="/cartype/list">品牌车型</a></li>
 
                     <li <c:if test="${page.index==2}">class="active"</c:if> ><a href="/search/product">商品搜索</a></li>
-
+                    <c:if test="${null!=user && user.hasAuthority('ProductController:toQuickAddPage')}">
+                    <li <c:if test="${page.index==3}">class="active"</c:if> ><a href="/product/toquickaddpage">快速添加</a></li>
+                    </c:if>
+                    <li <c:if test="${page.index==4}">class="active"</c:if> ><a href="/order/toaddpage">当前订单</a></li>
 
 
                 </ul>
@@ -91,16 +94,8 @@
                 <ul id="accounts-menu" class="nav nav-list collapse in">
 
 
-
-                    <c:choose>
-                        <c:when test="${null==user}">
-                            <li ><a href="/login">登陆</a></li>
-                        </c:when>
-                        <c:otherwise>
-                            <li ><a href="/loginout">登出</a></li>
-                        </c:otherwise>
-                    </c:choose>
-
+                    <li <c:if test="${page.index==11}">class="active"</c:if> ><a href="/order/list">订单管理</a></li>
+                    <li <c:if test="${page.index==12}">class="active"</c:if> ><a href="/customer/list">客户管理</a></li>
 
 
                 </ul>
@@ -110,82 +105,6 @@
             <jsp:include page="${page.includePage}.jsp"></jsp:include>
 
 
-
-
-
-
-
-
-
-
-            <div class="block">
-
-                <div id="tablewidget" class="block-body collapse in">
-                    <table class="table">
-                        <thead>
-                        <tr>
-                            <th width="20%" style="text-align:center;">时间</th>
-                            <th style="text-align:center;">操作</th>
-                        </tr>
-                        </thead>
-                        <tbody id="logtb">
-
-
-                        <tr>
-                            <td style="text-align:center;">2017骞碝6鏈坉20鏃� 14:42:55</td>
-                            <td style="text-align:center;">添加商品aa 增加为 4个.车型:奔腾X40 锐腾 奔腾B90 .</td>
-                        </tr>
-
-                        <tr>
-                            <td style="text-align:center;">2017骞碝6鏈坉20鏃� 14:40:42</td>
-                            <td style="text-align:center;">添加商品啊啊啊 增加为 4个.车型:汉腾X7 .</td>
-                        </tr>
-
-                        <tr>
-                            <td style="text-align:center;">2017骞碝6鏈坉20鏃� 14:07:26</td>
-                            <td style="text-align:center;">更新商品注塑 雨挡 更新前 8个.车型:15科鲁兹 .普通 雨挡 更新后 8个.车型:15科鲁兹 .</td>
-                        </tr>
-
-                        <tr>
-                            <td style="text-align:center;">2017骞碝6鏈坉20鏃� 14:07:11</td>
-                            <td style="text-align:center;">更新商品注塑 雨挡 更新前 8个.车型:15科鲁兹 .注塑 雨挡 更新后 8个.车型:15科鲁兹 .</td>
-                        </tr>
-
-                        <tr>
-                            <td style="text-align:center;">2017骞碝6鏈坉20鏃� 14:06:42</td>
-                            <td style="text-align:center;">更新商品注塑 雨挡 更新前 8个.车型:15科鲁兹 .注塑 雨挡 更新后 8个.车型:15科鲁兹 .</td>
-                        </tr>
-
-                        <tr>
-                            <td style="text-align:center;">2017骞碝6鏈坉20鏃� 14:04:40</td>
-                            <td style="text-align:center;">更新商品注塑 雨挡 更新前 8个.车型:15科鲁兹 .注塑 雨挡 更新后 8个.车型:15科鲁兹 .</td>
-                        </tr>
-
-                        <tr>
-                            <td style="text-align:center;">2017骞碝6鏈坉20鏃� 14:03:45</td>
-                            <td style="text-align:center;">更新商品注塑 雨挡 更新前 8个.车型:15科鲁兹 .注塑 雨挡 更新后 8个.车型:15科鲁兹 .</td>
-                        </tr>
-
-                        <tr>
-                            <td style="text-align:center;">2017骞碝6鏈坉20鏃� 13:54:44</td>
-                            <td style="text-align:center;">更新商品注塑 雨挡 更新前 8个.车型:15科鲁兹 .注塑 雨挡 更新后 8个.车型:15科鲁兹 .</td>
-                        </tr>
-
-                        <tr>
-                            <td style="text-align:center;">2017骞碝6鏈坉19鏃� 18:18:29</td>
-                            <td style="text-align:center;">减少一个商品注塑 雨挡 减少为 1个.车型:景逸 .</td>
-                        </tr>
-
-                        <tr>
-                            <td style="text-align:center;">2017骞碝6鏈坉19鏃� 18:15:58</td>
-                            <td style="text-align:center;">减少一个商品注塑 雨挡 减少为 5个.车型:劲炫 .</td>
-                        </tr>
-
-                        </tbody>
-                    </table>
-                    <!-- <p><a href="users.html">More...</a></p> -->
-                </div>
-            </div>
 
         </div>
     </div>

@@ -14,9 +14,10 @@ public interface ProductDao {
     public List<ProductVO> getProductVOByCarId(Long carId);
     public void updateProdectNumById(ProductVO productVO);
     public ProductVO getProductVOById(Long id);
+    public ProductVO getDisplayProductVOById(Long id);
     public void addProduct(ProductVO productVO);
     public void updateProdect(ProductVO productVO);
-    public void delProduct(Long id);
+    public void noDisplayProduct(Long id);
     public List<ProductVO> searchProduct(Map<String,String> map);
 
     /*修改数据库增加carstr字段*/

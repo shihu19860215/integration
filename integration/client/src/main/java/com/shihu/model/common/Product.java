@@ -98,5 +98,11 @@ public class Product {
 	public void setCarVOs(List<CarVO> carVOs) {
 		this.carVOs = carVOs;
 	}
+	public void setCarVOs(String carStr) {
+		if(null!=carStr&&carStr.length()>0){
+			Type t=new TypeToken<ArrayList<CarVO>>(){}.getType();
+			this.carVOs= Base.gson.fromJson(carStr,t);
+		}
+	}
 
 }

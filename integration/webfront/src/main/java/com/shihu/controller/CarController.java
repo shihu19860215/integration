@@ -20,6 +20,7 @@ import java.util.List;
 @Controller
 @RequestMapping("/car")
 public class CarController {
+    private final int index=1;
     @Autowired
     private CarService carService;
     @Autowired
@@ -29,7 +30,7 @@ public class CarController {
     @RequestMapping("/list")
     public ModelAndView listByCarTypeId(Long carTypeId,Integer errorInfoId) {
         ModelAndView modelAndView = new ModelAndView("home");
-        HomePageBean homePageBean = new HomePageBean(1, "car");
+        HomePageBean homePageBean = new HomePageBean(index, "car");
         modelAndView.addObject("page", homePageBean);
 
         CarType carType = carTypeService.getCarTypeById(carTypeId);
@@ -37,14 +38,14 @@ public class CarController {
 
 
         if(null!=errorInfoId){
-            modelAndView.addObject("errorInfo",Base.getErrorInfo(errorInfoId).getInfo());
+            homePageBean.setErrorInfo(Base.getErrorInfo(errorInfoId).getInfo());
         }
         return modelAndView;
     }
     @RequestMapping("/search")
     public ModelAndView listByCarTypeId(Long carTypeId,String searchStr) {
         ModelAndView modelAndView = new ModelAndView("home");
-        HomePageBean homePageBean = new HomePageBean(1, "car");
+        HomePageBean homePageBean = new HomePageBean(index, "car");
         modelAndView.addObject("page", homePageBean);
         CarType carType;
         if(null!=searchStr&&searchStr.length()>0){

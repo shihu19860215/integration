@@ -9,7 +9,7 @@ public class User {
     private Long id;
     private String username;
     private String password;
-    private Set<String> authorityUrls;
+    private Set<String> authorityStrSet;
     private Date registerDate;
 
     public User(){
@@ -52,11 +52,18 @@ public class User {
         this.registerDate = registerDate;
     }
 
-    public Set<String> getAuthorityUrls() {
-        return authorityUrls;
+    public Set<String> getAuthorityStrSet() {
+        return authorityStrSet;
     }
 
-    public void setAuthorityUrls(Set<String> authorityUrls) {
-        this.authorityUrls = authorityUrls;
+    public void setAuthorityStrSet(Set<String> authorityStrSet) {
+        this.authorityStrSet = authorityStrSet;
+    }
+    public boolean hasAuthority(String str){
+        boolean result=false;
+        if(null!=authorityStrSet){
+            result=authorityStrSet.contains(str);
+        }
+        return result;
     }
 }

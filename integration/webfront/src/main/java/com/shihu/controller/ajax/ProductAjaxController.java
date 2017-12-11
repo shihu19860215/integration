@@ -1,9 +1,12 @@
 package com.shihu.controller.ajax;
 
 import com.google.gson.Gson;
+import com.shihu.model.HomePageBean;
+import com.shihu.model.common.VO.ProductVO;
 import com.shihu.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
@@ -55,6 +58,46 @@ public class ProductAjaxController {
             PrintWriter out= null;
             out = response.getWriter();
             out.print(gson.toJson(map));
+            out.flush();
+            out.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @RequestMapping("/update")
+    public void update(HttpServletResponse response,ProductVO productVO, String carIds){
+        String[] strs=carIds.split(",");
+        productService.updateProduct(productVO,strs);
+
+        try {
+            //设置页面不缓存
+            response.setContentType("application/json");
+            response.setHeader("Pragma", "No-cache");
+            response.setHeader("Cache-Control", "no-cache");
+            response.setCharacterEncoding("UTF-8");
+            PrintWriter out= null;
+            out = response.getWriter();
+            out.print(gson.toJson("success"));
+            out.flush();
+            out.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    @RequestMapping("/del/{id}")
+    public void del(HttpServletResponse response,@PathVariable("id")Long id){
+        productService.delProduct(id);
+
+        try {
+            //设置页面不缓存
+            response.setContentType("application/json");
+            response.setHeader("Pragma", "No-cache");
+            response.setHeader("Cache-Control", "no-cache");
+            response.setCharacterEncoding("UTF-8");
+            PrintWriter out= null;
+            out = response.getWriter();
+            out.print(gson.toJson("success"));
             out.flush();
             out.close();
         } catch (IOException e) {

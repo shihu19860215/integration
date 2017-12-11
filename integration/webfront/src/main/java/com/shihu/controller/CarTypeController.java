@@ -15,18 +15,19 @@ import java.util.List;
 @Controller
 @RequestMapping("/cartype")
 public class CarTypeController {
+    private final int index=1;
     @Autowired
     private CarTypeService carTypeServer;
 
     @RequestMapping("/list")
     public ModelAndView list(Integer errorInfoId){
         ModelAndView modelAndView=new ModelAndView("home");
-        HomePageBean homePageBean=new HomePageBean(1,"cartype");
+        HomePageBean homePageBean=new HomePageBean(index,"cartype");
         modelAndView.addObject("page",homePageBean);
         List<CarTypeVO> carTypeList=  carTypeServer.getAllCarTypeVO();
         modelAndView.addObject("carTypeList",carTypeList);
         if(null!=errorInfoId){
-            modelAndView.addObject("errorInfo",Base.getErrorInfo(errorInfoId).getInfo());
+            homePageBean.setErrorInfo(Base.getErrorInfo(errorInfoId).getInfo());
         }
 
         return modelAndView;
@@ -35,7 +36,7 @@ public class CarTypeController {
     @RequestMapping("/search")
     public ModelAndView search(String searchStr){
         ModelAndView modelAndView=new ModelAndView("home");
-        HomePageBean homePageBean=new HomePageBean(1,"cartype");
+        HomePageBean homePageBean=new HomePageBean(index,"cartype");
         modelAndView.addObject("page",homePageBean);
         List<CarTypeVO> carTypeList;
         if(null!=searchStr&&searchStr.length()>0) {

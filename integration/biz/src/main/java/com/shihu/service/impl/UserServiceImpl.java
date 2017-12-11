@@ -1,6 +1,5 @@
 package com.shihu.service.impl;
 
-import com.shihu.model.common.Authority;
 import com.shihu.model.common.User;
 import com.shihu.model.common.VO.UserVO;
 import com.shihu.mybatis.dao.AuthorityDao;
@@ -25,9 +24,9 @@ public class UserServiceImpl implements UserService {
         if(null==userVO){
             result=null;
         }else {
-            Set<String> authoritys=authorityDao.getAuthoritysByUserId(userVO.getId());
+            Set<String> authoritys=authorityDao.getAuthorityStrByUserId(userVO.getId());
             result=new User(userVO);
-            result.setAuthorityUrls(authoritys);
+            result.setAuthorityStrSet(authoritys);
         }
         return result;
     }

@@ -21,16 +21,18 @@
 <div>
 
 
-        <div class="input-append">
-            <form id="formcar" action="/car/add" method="post">
-                <input type="hidden" name="carTypeId" value="${carType.id}"/>
+    <div class="input-append">
+        <form id="formcar" action="/car/add" method="post">
+            <input type="hidden" name="carTypeId" value="${carType.id}"/>
+            <c:if test="${null!=user && user.hasAuthority('CarController:add')}">
                 <input class="span2" name="name" type="text"/>
                 <button onclick="addSubmit()" class="btn" type="button"> 添加</button>
-                <input class="span2" name="searchStr" value="${searchStr}" type="text"/>
-                <button onclick="searchSubmit()" class="btn" type="button"> 搜索</button>
-            </form>
-        </div>
-    <p class="text-error">${errorInfo}</p>
+            </c:if>
+            <input class="span2" name="searchStr" value="${searchStr}" type="text"/>
+            <button onclick="searchSubmit()" class="btn" type="button"> 搜索</button>
+        </form>
+    </div>
+    <p class="text-error">${page.errorInfo}</p>
     <div class="row-fluid">
         <div class="block span12">
             <ul class="breadcrumb">
@@ -44,7 +46,11 @@
                             <c:if test="${ i.count%3==1}">
                                 <p>
                                     <a href="/product/list?carId=${item.id}&carTypeId=${carType.id}">${item.name}</a>
-                                    <a href="/car/del/${item.id}?carTypeId=${carType.id}" onclick="return delCar()"><i class="icon-remove"></i></a>
+
+                                    <c:if test="${null!=user && user.hasAuthority('CarController:delete')}">
+                                        <a href="/car/del/${item.id}?carTypeId=${carType.id}" onclick="return delCar()"><i
+                                                class="icon-remove"></i></a>
+                                    </c:if>
                                 </p>
                             </c:if>
                         </c:forEach>
@@ -54,7 +60,10 @@
                             <c:if test="${i.count%3==2}">
                                 <p>
                                     <a href="/product/list?carId=${item.id}&carTypeId=${carType.id}">${item.name}</a>
-                                    <a href="/car/del/${item.id}?carTypeId=${carType.id}" onclick="return delCar()"><i class="icon-remove"></i></a>
+                                    <c:if test="${null!=user && user.hasAuthority('CarController:delete')}">
+                                        <a href="/car/del/${item.id}?carTypeId=${carType.id}" onclick="return delCar()"><i
+                                                class="icon-remove"></i></a>
+                                    </c:if>
                                 </p>
                             </c:if>
                         </c:forEach>
@@ -65,7 +74,10 @@
                             <c:if test="${i.count%3==0}">
                                 <p>
                                     <a href="/product/list?carId=${item.id}&carTypeId=${carType.id}">${item.name}</a>
-                                    <a href="/car/del/${item.id}?carTypeId=${carType.id}" onclick="return delCar()"><i class="icon-remove"></i></a>
+                                    <c:if test="${null!=user && user.hasAuthority('CarController:delete')}">
+                                        <a href="/car/del/${item.id}?carTypeId=${carType.id}" onclick="return delCar()"><i
+                                                class="icon-remove"></i></a>
+                                    </c:if>
                                 </p>
                             </c:if>
                         </c:forEach>

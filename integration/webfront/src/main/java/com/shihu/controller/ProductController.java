@@ -22,6 +22,8 @@ import java.util.List;
 @Controller
 @RequestMapping("/product")
 public class ProductController {
+    private final int productIndex=1;
+    private final int quickProductIndex=3;
     @Autowired
     private ProductService productService;
     @Autowired
@@ -32,7 +34,7 @@ public class ProductController {
     @RequestMapping("/list")
     public ModelAndView list(Long carId,Long carTypeId){
         ModelAndView modelAndView=new ModelAndView("home");
-        HomePageBean homePageBean=new HomePageBean(1,"product");
+        HomePageBean homePageBean=new HomePageBean(productIndex,"product");
         modelAndView.addObject("page",homePageBean);
 
         List<Product> productList=productService.getProductListByCarId(carId);
@@ -47,7 +49,7 @@ public class ProductController {
     @RequestMapping("/toaddpage/{id}")
     public ModelAndView toAddPage(@PathVariable("id")Long carId){
         ModelAndView modelAndView=new ModelAndView("home");
-        HomePageBean homePageBean=new HomePageBean(1,"product_add");
+        HomePageBean homePageBean=new HomePageBean(productIndex,"product_add");
         modelAndView.addObject("page",homePageBean);
 
         CarVO carVO=carService.getCarVOByIdCache(carId);
@@ -57,7 +59,7 @@ public class ProductController {
     @RequestMapping("/toupdatepage/{id}")
     public ModelAndView toUpdatePage(@PathVariable("id")Long id,Long carId){
         ModelAndView modelAndView=new ModelAndView("home");
-        HomePageBean homePageBean=new HomePageBean(1,"product_update");
+        HomePageBean homePageBean=new HomePageBean(productIndex,"product_update");
         modelAndView.addObject("page",homePageBean);
 
         CarVO carVO=carService.getCarVOByIdCache(carId);
@@ -96,12 +98,37 @@ public class ProductController {
         return "redirect:/product/list?carId="+carId+"&carTypeId="+carTypeId;
     }
 
+    @RequestMapping("/toquickaddpage")
+    public ModelAndView toQuickAddPage(){
+        ModelAndView modelAndView=new ModelAndView("home");
+        HomePageBean homePageBean=new HomePageBean(quickProductIndex,"product_quick_add");
+        modelAndView.addObject("page",homePageBean);
+
+        return modelAndView;
+    }
 
 
+    @RequestMapping("/quickadd")
+    public ModelAndView quickadd(ProductVO productVO, Long[] carIds){
+        ModelAndView modelAndView=new ModelAndView("forward:/product/toquickaddpage");
+        HomePageBean homePageBean=new HomePageBean(quickProductIndex,"product_quick_add");
+        modelAndView.addObject("page",homePageBean);
+
+        if(null!=carIds&&carIds.length>0){
+            List<CarVO> cars=new ArrayList<CarVO>();
+            for (Long cId:carIds){
+                cars.add(carService.getCarVOByIdCache(cId));
+            }
+            productVO.setCarStr(cars);
+            productService.addProduct(productVO,cars);
+        }
+
+        return modelAndView;
+    }
 
     /*修改数据库增加carstr字段*/
     @RequestMapping("/changesql")
-    public String changeSql(@PathVariable("id")Long id,Long carId,Long carTypeId){
+    public String changeSql(){
         productService.changesql();
         return "redirect:/cartype/list";
     }

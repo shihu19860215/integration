@@ -1,37 +1,50 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <script type="text/javascript">
     var addCount = function (productId, o) {
-        $.post("productAjax!addCount",
+        $.post("/ajax/product/add",
             {'productId': productId},
             function (data) {
-                $(o).next().html(" " + data.result.count + " ");
+                $(o).next().html(" " + data.count + " ");
+                //location = location;
             }
         );
+        return false;
     }
 
     var subCount = function (productId, o) {
-        $.post("productAjax!subCount",
+        $.post("/ajax/product/sub",
             {'productId': productId},
             function (data) {
-                $(o).prev().html(" " + data.result.count + " ");
+                $(o).prev().html(" " + data.count + " ");
+                //location = location;
             }
         );
+        return false;
     }
 
     var toSearchUpdatePage = function (id) {
-        $("#productId").val(id);
-        $("#productSerachForm").attr("action", "productSerach!toSearchUpdatePage").submit();
+        $("#productSerachForm").attr("action", "/search/product/toupdatepage/" + id).submit();
     }
 
     var delProduct = function (id) {
         if (confirm('确定要删除嘛?')) {
-            $("#productId").val(id);
-            $("#productSerachForm").attr("action", "productSerach!delProduct").submit();
-        } else {
-            return false;
+            $.post("/ajax/product/del/" + id,
+                {},
+                function (data) {
+                    if (null != data) {
+                        if ("success" == data) {
+                            alert(" 删除成功");
+                            $("#productSerachForm").submit();
+                            return;
+                        }
+                    }
+                    alert("删除失败");
+                }
+            );
+
         }
+        return false;
     }
 
     var sortCar = function () {
@@ -79,8 +92,8 @@
     }
 
     var statistics = function () {
-        $("#carCount").html("共" + $("#productSerachForm").next().find("tbody tr").length + "种");
-        var spans = $("#productSerachForm").next().find("tbody tr span");
+        $("#carCount").html("共" + $("#productTbady").find("tr").length + "种");
+        var spans = $("#productTbady").find("tr span");
         var count = 0;
         for (var i = 0; i < spans.length; i++) {
             count = count + parseInt($(spans[i]).html());
@@ -103,11 +116,26 @@
             return false;
         }
     }
+
+    var addToOrder = function (productId, obj) {
+        $.post("/ajax/order/addproduct/" + productId,
+            {},
+            function (data) {
+                if (null != data && "success" == data) {
+                    $(obj).remove();
+                } else {
+                    alert("加入订单失败");
+                }
+            }
+        );
+        return false;
+    }
 </script>
 
 <div>
     <div class="btn-toolbar">
         <form id="productSerachForm" class="form-inline" action="/search/product" method="post">
+            <input type="hidden" id="productId" name="productId">
             <input type="hidden" id="sort" name="sort" value="${null==sort?'pNameAsc':sort}">
             <input type="text" name="carName" value="${carName}" class="input-small" placeholder="车型">
             <input type="text" name="productName" value="${productName}" class="input-small" placeholder="商品名">
@@ -131,40 +159,58 @@
             <thead>
             <tr>
                 <th onclick="sortCar()" width="40%">通用车型</th>
-                <th onclick="sortProduct()" width="15%">商品名</th>
-                <th onclick="sortCount()" width="10%">个数</th>
+                <th onclick="sortProduct()" width="10%">商品名</th>
+                <th onclick="sortCount()" width="8%">个数</th>
                 <th onclick="sortVersion()" width="10%">型号</th>
                 <th width="15%">备注</th>
-                <th width="10%">价格</th>
-                <!--
-                <th>批发价</th>
-                <th>零售价</th> -->
+                <th width="7%">价格</th>
+                <c:if test="${null!=user}">
+                    <th width="10%">操作</th>
+                </c:if>
             </tr>
             </thead>
-            <tbody>
+            <tbody id="productTbady">
             <c:forEach items="${products}" varStatus="i" var="product">
                 <tr>
                     <th><c:forEach items="${product.carVOs}" var="carVO">
-                            ${carVO.name}/
-                        </c:forEach></th>
+                        ${carVO.name}/
+                    </c:forEach></th>
                     <td>${product.name}</td>
                     <td>
-                        <a href="javascript:void(0)" onclick="addCount(${product.id},this)"><i class="icon-plus"></i></a>
+                        <c:if test="${null!=user && user.hasAuthority('ProductAjaxController:addNum')}">
+                            <a onclick="addCount(${product.id},this)"><i
+                                    class="icon-plus"></i></a>
+                        </c:if>
                         <span>${product.num}</span>
-                        <a href="javascript:void(0)" onclick="subCount(${product.id},this)"><i class="icon-minus"></i></a>
+                        <c:if test="${null!=user && user.hasAuthority('ProductAjaxController:subNum')}">
+                            <a  onclick="subCount(${product.id},this)"><i
+                                    class="icon-minus"></i></a>
+                        </c:if>
                     </td>
                     <td>${product.version}</td>
-                    <td>${product.ownerprice}</td>
                     <td>${product.remark}</td>
+                    <td>${product.ownerprice}</td>
                     <!-- <td><s:property value="otherprice"/></td>-->
-                    <td>
-                        <a onclick="toSearchUpdatePage(${product.id})" href="javascript:void(0);"><i
-                                class="icon-pencil"></i></a>
-                        <a onclick="delProduct(${product.id})" href="javascript:void(0);" role="button" data-toggle="modal"
-                           onclick="return confirm('确定要删除嘛?')">
-                            <i class="icon-remove"></i>
-                        </a>
-                    </td>
+                    <c:if test="${null!=user}">
+                        <td>
+
+                            <c:if test="${user.hasAuthority('ProductSearchController:toUpdatePage')}">
+                                <a onclick="toSearchUpdatePage(${product.id})" ><i
+                                        class="icon-pencil"></i></a>
+                            </c:if>
+                            <c:if test="${user.hasAuthority('ProductAjaxController:del')}">
+                                <a onclick="delProduct(${product.id})" role="button"
+                                   data-toggle="modal"
+                                   onclick="return confirm('确定要删除嘛?')">
+                                    <i class="icon-remove"></i>
+                                </a>
+                            </c:if>
+                            <a onclick="addToOrder(${product.id},this)"  role="button"
+                               data-toggle="modal">
+                                <i class="icon-shopping-cart"></i>
+                            </a>
+                        </td>
+                    </c:if>
                 </tr>
             </c:forEach>
             </tbody>

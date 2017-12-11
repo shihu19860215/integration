@@ -3,10 +3,7 @@ package com.shihu.service.impl;
 import com.google.gson.Gson;
 import com.shihu.model.common.Car;
 import com.shihu.model.common.Product;
-import com.shihu.model.common.VO.CarProductVO;
-import com.shihu.model.common.VO.CarTypeVO;
-import com.shihu.model.common.VO.CarVO;
-import com.shihu.model.common.VO.ProductVO;
+import com.shihu.model.common.VO.*;
 import com.shihu.mybatis.dao.CarProductDao;
 import com.shihu.mybatis.dao.ProductDao;
 import com.shihu.service.CarService;
@@ -55,6 +52,15 @@ public class ProductServiceImpl implements ProductService{
         Product product=new Product(productVO);
         return product;
     }
+    public Product getDisplayProductById(Long id){
+        ProductVO productVO=productDao.getDisplayProductVOById(id);
+        if(null==productVO){
+            return null;
+        }else {
+            Product product=new Product(productVO);
+            return product;
+        }
+    }
     public Product getProductByIdWithCarTypeName(Long id){
         ProductVO productVO=productDao.getProductVOById(id);
         Product product=new Product(productVO);
@@ -63,8 +69,6 @@ public class ProductServiceImpl implements ProductService{
     }
 
     public void updateProduct(ProductVO productVO, Long[] carIds, Long carId) {
-        List<CarVO> carVOs=new ArrayList<CarVO>();
-        List<Long> removeLongList=new ArrayList<Long>();
         List<Long> longList=new ArrayList<Long>();
         longList.add(carId);
         if(null!=carIds){
@@ -72,41 +76,88 @@ public class ProductServiceImpl implements ProductService{
                 longList.add(l);
             }
         }
+        this.update(productVO,longList);
+    }
+
+    public void updateProduct(ProductVO productVO,Long[] carIds){
+        List<Long> longList=null;
+        if(null!=carIds){
+            longList=new ArrayList<Long>();
+            for(Long l:carIds){
+                longList.add(l);
+            }
+        }
+        this.update(productVO,longList);
+    }
+    public void updateProduct(ProductVO productVO,String[] carIds){
+        List<Long> longList=null;
+        if(null!=carIds){
+            longList=new ArrayList<Long>();
+            for(String s:carIds){
+                longList.add(Long.valueOf(s));
+            }
+        }
+        this.update(productVO,longList);
+    }
+
+    /**
+     * 更新商品信息并更新商品车型关系
+     * @param productVO
+     * @param longList
+     */
+    private void update(ProductVO productVO,List<Long> longList){
+        if(null==longList||longList.size()<=0)return;
         ProductVO productVOOld=productDao.getProductVOById(productVO.getId());
         Product productOld=new Product(productVOOld);
-        List<CarVO> carVOList=productOld.getCarVOs();
-        for (CarVO c:carVOList){
-            for(Long l:longList){
-                if(c.getId().equals(l)){
-                    carVOs.add(c);
-                    removeLongList.add(l);
-                }
-            }
-        }
-        for (CarVO c:carVOs){
-            carVOList.remove(c);
-        }
-        for (Long l:removeLongList){
-            longList.remove(l);
-        }
-        if(carVOList.size()>0||longList.size()>0){
-            if(longList.size()>0){
+        List<CarVO> carVOListOld=productOld.getCarVOs();
+        boolean carsIsChange;
+        if(longList.size()==carVOListOld.size()){
+            int sameCount=0;
+            for (CarVO c:carVOListOld){
                 for(Long l:longList){
-                    CarVO carVO=carService.getCarVOByIdCache(l);
-                    carVOs.add(carVO);
-                    carProductDao.addCarProductVO(new CarProductVO(carVO.getId(),productVO.getId()));
+                    if(c.getId().equals(l)){
+                        sameCount++;
+                        break;
+                    }
                 }
             }
-            if(carVOList.size()>0){
-                for (CarVO c:carVOList){
-                    carProductDao.delCarProductVO(new CarProductVO(c.getId(),productVO.getId()));
-                }
+            if (sameCount==longList.size()){
+                carsIsChange=false;
+            }else {
+                carsIsChange=true;
             }
-            productVO.setCarStr(carVOs);
-        }else{
-            productVO.setCarStr(productVOOld.getCarStr());
+        }else {
+            carsIsChange=true;
         }
-        productDao.updateProdect(productVO);
+
+        if(carsIsChange
+                ||!productVO.getName().equals(productOld.getName())
+                ||(null!=productVO.getVersion()&&!productVO.getVersion().equals(productVOOld.getVersion())
+                ||(null!=productVOOld.getVersion()&&!productVOOld.getVersion().equals(productVO.getVersion()))
+                ||(null!=productVO.getRemark()&&!productVO.getRemark().equals(productVOOld.getRemark())))
+                ||(null!=productVOOld.getRemark()&&!productOld.getRemark().equals(productVO.getRemark()))
+                ){
+            List<CarVO> carVOList=new ArrayList();
+            for(Long l:longList){
+                carVOList.add(carService.getCarVOByIdCache(l));
+            }
+            productVO.setCarStr(carVOList);
+
+            productDao.noDisplayProduct(productVO.getId());
+            this.addProduct(productVO,carVOList);
+            for(CarVO carVO:productOld.getCarVOs()){
+                carProductDao.delCarProductVO(new CarProductVO(carVO.getId(),productOld.getId()));
+            }
+        }else if(
+                productVO.getNum()!=productVOOld.getNum()
+                        ||(null!=productVO.getOtherprice()&&!productVO.getOtherprice().equals(productVOOld.getOtherprice()))
+                        ||(null!=productVOOld.getOtherprice()&&!productVOOld.getOtherprice().equals(productVO.getOtherprice()))
+                        ||(null!=productVO.getOwnerprice()&&!productVO.getOwnerprice().equals(productVOOld.getOwnerprice()))
+                        ||(null!=productVOOld.getOwnerprice()&&!productVOOld.getOwnerprice().equals(productVO.getOwnerprice()))
+                ){
+            productVO.setCarStr(productVOOld.getCarStr());
+            productDao.updateProdect(productVO);
+        }
     }
 
     public int addProductNum(Long id) {
@@ -131,12 +182,8 @@ public class ProductServiceImpl implements ProductService{
     }
 
     public void delProduct(Long id){
-        ProductVO productVO=productDao.getProductVOById(id);
-        Product product=new Product(productVO);
-        for(CarVO carVO:product.getCarVOs()){
-            carProductDao.delCarProductVO(new CarProductVO(carVO.getId(),id));
-        }
-        productDao.delProduct(id);
+        carProductDao.delCarProductVOByProductId(id);
+        productDao.noDisplayProduct(id);
     }
 
     public List<Product> searchProduct(String carName,String productName,String productVersion,String sort){

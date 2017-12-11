@@ -26,4 +26,6 @@ public class Base {
         errorInfoMap.put(CAR_NOT_EMPTY.getId(),CAR_NOT_EMPTY);
     }
 
+
+    public final static String DATE_PARSE_YYYYMMdd="YYYYMMdd";
 }

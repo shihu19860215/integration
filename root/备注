@@ -1,0 +1,13 @@
+增加product display字段
+增加car_product id字段
+增加product carstr字段
+
+/*
+查询商品不显示后没有被删除的商品汽车联系表
+select * from car_product as cp join product p on cp.productId=p.id where p.display=false;
+删除商品不显示后没有被删除的商品汽车联系表
+delete from car_product where id in
+(select a.id from (select cp.id from car_product as cp join product p on cp.productId=p.id where p.display=false) a);
+*/
+
+在数据库手动添加一个(个人客户),ID 为1 name为个人
