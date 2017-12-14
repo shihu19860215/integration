@@ -5,6 +5,7 @@ import com.shihu.model.common.Car;
 import com.shihu.model.common.Product;
 import com.shihu.model.common.VO.*;
 import com.shihu.mybatis.dao.CarProductDao;
+import com.shihu.mybatis.dao.LogDao;
 import com.shihu.mybatis.dao.ProductDao;
 import com.shihu.service.CarService;
 import com.shihu.service.CarTypeService;
@@ -26,6 +27,8 @@ public class ProductServiceImpl implements ProductService{
     private CarProductDao carProductDao;
     @Autowired
     private CarService carService;
+    @Autowired
+    private LogDao logDao;
 
     public List<Product> getProductListByCarId(Long carId){
         List<ProductVO> productVOs=productDao.getProductVOByCarId(carId);
@@ -41,11 +44,14 @@ public class ProductServiceImpl implements ProductService{
         }
         return products;
     }
+    @Transactional
     public void addProduct(ProductVO productVO,List<CarVO> cars){
         productDao.addProduct(productVO);
         for(CarVO c:cars){
             carProductDao.addCarProductVO(new CarProductVO(c.getId(),productVO.getId()));
         }
+        Product product=new Product(productVO);
+        logDao.addLog(new LogVO("添加商品:"+product.toLog()));
     }
     public Product getProductById(Long id){
         ProductVO productVO=productDao.getProductVOById(id);
@@ -68,6 +74,7 @@ public class ProductServiceImpl implements ProductService{
         return product;
     }
 
+    @Transactional
     public void updateProduct(ProductVO productVO, Long[] carIds, Long carId) {
         List<Long> longList=new ArrayList<Long>();
         longList.add(carId);
@@ -79,6 +86,7 @@ public class ProductServiceImpl implements ProductService{
         this.update(productVO,longList);
     }
 
+    @Transactional
     public void updateProduct(ProductVO productVO,Long[] carIds){
         List<Long> longList=null;
         if(null!=carIds){
@@ -89,6 +97,7 @@ public class ProductServiceImpl implements ProductService{
         }
         this.update(productVO,longList);
     }
+    @Transactional
     public void updateProduct(ProductVO productVO,String[] carIds){
         List<Long> longList=null;
         if(null!=carIds){
@@ -144,10 +153,15 @@ public class ProductServiceImpl implements ProductService{
             productVO.setCarStr(carVOList);
 
             productDao.noDisplayProduct(productVO.getId());
-            this.addProduct(productVO,carVOList);
+            productDao.addProduct(productVO);
+            for(CarVO c:carVOList){
+                carProductDao.addCarProductVO(new CarProductVO(c.getId(),productVO.getId()));
+            }
             for(CarVO carVO:productOld.getCarVOs()){
                 carProductDao.delCarProductVO(new CarProductVO(carVO.getId(),productOld.getId()));
             }
+
+            logDao.addLog(new LogVO("更新商品:更新前"+productOld.toLog()+"更新后"+new Product(productVO).toLog()));
         }else if(
                 productVO.getNum()!=productVOOld.getNum()
                         ||(null!=productVO.getOtherprice()&&!productVO.getOtherprice().equals(productVOOld.getOtherprice()))
@@ -157,18 +171,22 @@ public class ProductServiceImpl implements ProductService{
                 ){
             productVO.setCarStr(productVOOld.getCarStr());
             productDao.updateProdect(productVO);
+            logDao.addLog(new LogVO("更新商品:更新前"+productOld.toLog()+"更新后"+new Product(productVO).toLog()));
         }
     }
 
+    @Transactional
     public int addProductNum(Long id) {
         int count;
         ProductVO productVO=productDao.getProductVOById(id);
         count=productVO.getNum()+1;
         productVO.setNum(count);
         productDao.updateProdectNumById(productVO);
+        logDao.addLog(new LogVO("商品数量加一:"+new Product(productVO).toLog()));
         return count;
     }
 
+    @Transactional
     public int subProductNum(Long id) {
         int count;
         ProductVO productVO=productDao.getProductVOById(id);
@@ -178,12 +196,16 @@ public class ProductServiceImpl implements ProductService{
         }
         productVO.setNum(count);
         productDao.updateProdectNumById(productVO);
+        logDao.addLog(new LogVO("商品数量减一:"+new Product(productVO).toLog()));
         return count;
     }
 
+    @Transactional
     public void delProduct(Long id){
+        ProductVO productVO=productDao.getProductVOById(id);
         carProductDao.delCarProductVOByProductId(id);
         productDao.noDisplayProduct(id);
+        logDao.addLog(new LogVO("删除商品:"+new Product(productVO).toLog()));
     }
 
     public List<Product> searchProduct(String carName,String productName,String productVersion,String sort){

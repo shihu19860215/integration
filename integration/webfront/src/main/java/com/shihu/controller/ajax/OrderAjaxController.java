@@ -1,6 +1,8 @@
 package com.shihu.controller.ajax;
 
 import com.google.gson.Gson;
+import com.shihu.base.AjaxResult;
+import com.shihu.exception.PagePromptException;
 import com.shihu.model.common.Order;
 import com.shihu.model.common.OrderProduct;
 import com.shihu.model.common.VO.OrderProductVO;
@@ -21,7 +23,8 @@ import java.util.ArrayList;
 @Controller
 @RequestMapping("/ajax/order")
 public class OrderAjaxController {
-    public static Gson gson=new Gson();
+    @Autowired
+    public Gson gson;
     @Autowired
     private ProductService productService;
     @Autowired
@@ -76,6 +79,7 @@ public class OrderAjaxController {
 
     @RequestMapping("/save")
     public void save(HttpSession session,HttpServletResponse response,Order order){
+        AjaxResult ajaxResult=new AjaxResult();
         session.setAttribute("order",order);
         try {
             //设置页面不缓存
@@ -85,7 +89,8 @@ public class OrderAjaxController {
             response.setCharacterEncoding("UTF-8");
             PrintWriter out= null;
             out = response.getWriter();
-            out.print(gson.toJson("success"));
+            ajaxResult.setState(1);
+            out.print(ajaxResult.toJsonStr());
             out.flush();
             out.close();
         } catch (IOException e) {
@@ -95,8 +100,15 @@ public class OrderAjaxController {
     }
 
     @RequestMapping("/add")
-    public void add(HttpServletResponse response,Order order){
-        orderService.addOrder(order);
+    public void add(HttpSession session,HttpServletResponse response,Order order){
+        AjaxResult ajaxResult=new AjaxResult();
+        PagePromptException pagePromptException=null;
+        try {
+            orderService.addOrder(order);
+            session.removeAttribute("order");
+        } catch (PagePromptException e) {
+            pagePromptException=e;
+        }
         try {
             //设置页面不缓存
             response.setContentType("application/json");
@@ -105,7 +117,13 @@ public class OrderAjaxController {
             response.setCharacterEncoding("UTF-8");
             PrintWriter out= null;
             out = response.getWriter();
-            out.print(gson.toJson("success"));
+            if(null!=pagePromptException){
+                ajaxResult.setState(-1);
+                ajaxResult.setInfo(pagePromptException.getPromptInfo());
+            }else {
+                ajaxResult.setState(1);
+            }
+            out.print(ajaxResult.toJsonStr());
             out.flush();
             out.close();
         } catch (IOException e) {
@@ -116,6 +134,7 @@ public class OrderAjaxController {
 
     @RequestMapping("/saveremarks")
     public void updateRemarks(HttpServletResponse response,OrderVO orderVO){
+        AjaxResult ajaxResult=new AjaxResult();
         orderService.updateOrderRemarksById(orderVO);
         try {
             //设置页面不缓存
@@ -125,7 +144,8 @@ public class OrderAjaxController {
             response.setCharacterEncoding("UTF-8");
             PrintWriter out= null;
             out = response.getWriter();
-            out.print(gson.toJson("success"));
+            ajaxResult.setState(1);
+            out.print(ajaxResult.toJsonStr());
             out.flush();
             out.close();
         } catch (IOException e) {

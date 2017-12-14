@@ -1,6 +1,6 @@
 package com.shihu.controller;
 
-import com.shihu.model.HomePageBean;
+import com.shihu.model.common.HomePageBean;
 import com.shihu.model.common.Order;
 import com.shihu.model.common.OrderSearch;
 import com.shihu.model.common.Product;
@@ -54,7 +54,7 @@ public class OrderController {
                 modelAndView.addObject("productList",productList);
             }
             if(null!=order.getCustomerVO()&&null!=order.getCustomerVO().getId()){
-                order.setCustomerVO(customerService.getCustomerVOById(order.getCustomerVO().getId()));
+                order.setCustomerVO(customerService.getCustomerVOByIdCache(order.getCustomerVO().getId()));
             }
         }
 
@@ -76,19 +76,7 @@ public class OrderController {
         ModelAndView modelAndView=new ModelAndView("home");
         HomePageBean homePageBean=new HomePageBean(manageOrderIndex,"order");
         modelAndView.addObject("page",homePageBean);
-        orderSearch.conversionDate();
         List<Order> orderList=orderService.getOrderWithCustomerByOrderSearch(orderSearch);
-        modelAndView.addObject("orderList",orderList);
-
-        return modelAndView;
-    }
-
-    @RequestMapping("/list")
-    public ModelAndView list(){
-        ModelAndView modelAndView=new ModelAndView("home");
-        HomePageBean homePageBean=new HomePageBean(manageOrderIndex,"order");
-        modelAndView.addObject("page",homePageBean);
-        List<Order> orderList=orderService.getOrderWithCustomer();
         modelAndView.addObject("orderList",orderList);
 
         return modelAndView;

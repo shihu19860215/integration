@@ -1,5 +1,6 @@
 package com.shihu.service;
 
+import com.shihu.exception.PagePromptException;
 import com.shihu.model.common.CarType;
 import com.shihu.model.common.VO.CarTypeVO;
 
@@ -14,7 +15,7 @@ public interface CarTypeService {
     public CarTypeVO getCarTypeVOByIdCache(Long id);
     public List<CarTypeVO> getAllCarTypeVO();
     public List<CarTypeVO> getCarTypeVOLikeName(String name);
-    public boolean deleteCarTypeById(Long id);
-    public boolean addCarTypeVO(CarTypeVO carTypeVO);
+    public void deleteCarTypeById(Long id) throws PagePromptException;
+    public void addCarTypeVO(CarTypeVO carTypeVO) throws PagePromptException;
     public CarType getCarTypeById(Long id);
 }

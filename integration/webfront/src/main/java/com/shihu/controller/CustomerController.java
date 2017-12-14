@@ -1,6 +1,6 @@
 package com.shihu.controller;
 
-import com.shihu.model.HomePageBean;
+import com.shihu.model.common.HomePageBean;
 import com.shihu.model.common.VO.CustomerVO;
 import com.shihu.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +44,7 @@ public class CustomerController {
         HomePageBean homePageBean=new HomePageBean(index,"customer_update");
         modelAndView.addObject("page",homePageBean);
 
-        CustomerVO customerVO=customerService.getCustomerVOById(id);
+        CustomerVO customerVO=customerService.getCustomerVOByIdCache(id);
         modelAndView.addObject("customerVO",customerVO);
         return  modelAndView;
     }

@@ -9,6 +9,6 @@ public interface CustomerService {
     public void addCustomerVO(CustomerVO customerVO);
     public void updateCustomerVO(CustomerVO customerVO);
     public void delCustomerVO(Long id);
-    public CustomerVO getCustomerVOById(Long id);
+    public CustomerVO getCustomerVOByIdCache(Long id);
     public List<CustomerVO> getCustomerVOIdNameListLikeName(String name);
 }

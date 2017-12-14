@@ -31,7 +31,7 @@
             <button onclick="searchSubmit()" class="btn" type="button"> 搜索</button>
         </form>
     </div>
-    <p class="text-error">${page.errorInfo}</p>
+    <p class="text-error">${page.pagePromptException.promptInfo}</p>
     <div class="row-fluid">
         <div class="block span12">
             <ul class="breadcrumb">

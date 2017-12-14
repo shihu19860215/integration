@@ -74,7 +74,7 @@
             <div class="block-heading">Sign In</div>
             <div class="block-body">
                 <form action="login" method="post">
-                    <p class="text-error">${errorInfo}</p>
+                    <p class="text-error">${pagePromptException.promptInfo}</p>
                     <label>Username</label>
                     <input type="text" name="username" class="span12">
                     <label>Password</label>

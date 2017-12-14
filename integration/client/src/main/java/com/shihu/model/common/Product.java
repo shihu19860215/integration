@@ -105,4 +105,27 @@ public class Product {
 		}
 	}
 
+	public String toLog(){
+		StringBuffer sb=new StringBuffer();
+		if(null!=version&&!"".equals(version)){
+			sb.append(version).append(" ");
+		}
+		sb.append(name)
+				.append(" ")
+				.append(num)
+				.append("个.")
+				.append("车型:");
+		int i=0;
+		for(;i<carVOs.size()-1;i++){
+			sb.append(carVOs.get(i).getName()).append(" ");
+		}
+		sb.append(carVOs.get(i).getName()).append(" ");
+		sb.append(".");
+		if(null!=remark&&!"".equals(remark)){
+			sb.append("(注解:")
+				.append(remark)
+				.append(").");
+		}
+		return sb.toString();
+	}
 }

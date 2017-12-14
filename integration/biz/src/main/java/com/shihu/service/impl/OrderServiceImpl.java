@@ -1,18 +1,20 @@
 package com.shihu.service.impl;
 
+import com.shihu.base.Base;
+import com.shihu.exception.PagePromptException;
 import com.shihu.model.common.Order;
 import com.shihu.model.common.OrderSearch;
 import com.shihu.model.common.Product;
-import com.shihu.model.common.VO.CustomerVO;
-import com.shihu.model.common.VO.OrderProductAndProductVO;
-import com.shihu.model.common.VO.OrderProductVO;
-import com.shihu.model.common.VO.OrderVO;
+import com.shihu.model.common.VO.*;
 import com.shihu.mybatis.dao.OrderDao;
 import com.shihu.mybatis.dao.OrderProductDao;
+import com.shihu.mybatis.dao.ProductDao;
 import com.shihu.service.CustomerService;
 import com.shihu.service.OrderService;
+import com.shihu.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -21,16 +23,17 @@ import java.util.List;
 
 @Service
 public class OrderServiceImpl implements OrderService {
-    private SimpleDateFormat simpleDateFormat=new SimpleDateFormat("YYYYMMdd");
-    private SimpleDateFormat sdfTime=new SimpleDateFormat("YYYY-MM-dd hh:mm:ss");
     @Autowired
     private OrderDao orderDao;
     @Autowired
-    private OrderProductDao productDao;
+    private OrderProductDao orderProductDao;
+    @Autowired
+    private ProductDao productDao;
     @Autowired
     private CustomerService customerService;
 
-    public void addOrder(Order order) {
+    @Transactional
+    public void addOrder(Order order) throws PagePromptException{
         if(null!=order.getCustomerVO()
                 &&null!=order.getCustomerVO().getId()
                 &&null!=order.getOrderProductVOList()
@@ -41,16 +44,25 @@ public class OrderServiceImpl implements OrderService {
             List<OrderProductVO> orderProductVOList=order.getOrderProductVOList();
             for(int i=0;i<orderProductVOList.size();i++){
                 OrderProductVO orderProductVO=orderProductVOList.get(i);
+                ProductVO productVO=productDao.getDisplayProductVOById(orderProductVO.getProductId());
+                if(null==productVO){
+                    throw  new PagePromptException(PagePromptException.ADD_ORDER_ERROR_PRODCUT_INVAILD);
+                }
+                if(orderProductVO.isSell()&&orderProductVO.getNum()>productVO.getNum()){
+                    throw  new PagePromptException(PagePromptException.ADD_ORDER_ERROR_PRODCUT_NUM_LESS);
+                }
+                productVO.setNum(productVO.getNum()-orderProductVO.getNum());
+                productDao.updateProdectNumById(productVO);
                 orderProductVO.setOrderId(orderVO.getId());
-                productDao.addOrderProductVO(orderProductVO);
+                orderProductDao.addOrderProductVO(orderProductVO);
             }
         };
     }
 
     public Order getOrderById(Long id) {
         OrderVO orderVO=orderDao.getOrderVOById(id);
-        CustomerVO customerVO=customerService.getCustomerVOById(orderVO.getId());
-        List<OrderProductAndProductVO> orderProductAndProductVOList= productDao.getOrderProductAndProductVOListByOrderId(id);
+        CustomerVO customerVO=customerService.getCustomerVOByIdCache(orderVO.getId());
+        List<OrderProductAndProductVO> orderProductAndProductVOList= orderProductDao.getOrderProductAndProductVOListByOrderId(id);
         Order order=new Order(orderVO,customerVO,orderProductAndProductVOList);
         return order;
     }
@@ -59,51 +71,19 @@ public class OrderServiceImpl implements OrderService {
         orderDao.updateOrderRemarks(orderVO);
     }
 
-    public List<Order> getOrderWithCustomerLikeCustomerNameByDate(String customerName,String startDate,String endDate){
-        Date start=null,end=null;
-        try {
-            start=simpleDateFormat.parse(startDate);
-            end=simpleDateFormat.parse(endDate);
-        }catch (Exception e){
-        }
-        List<OrderVO> orderVOList= orderDao.getOrderVOListLikeLikeCustomerNameByDate("%"+customerName+"%",start,end);
-        List<Order> orderList=new ArrayList<Order>();
-        for(OrderVO orderVO:orderVOList){
-            Order order=new Order();
-            order.setId(orderVO.getId());
-            order.setCreateTime(sdfTime.format(orderVO.getCreateTime()));
-            order.setProductNames(orderVO.getProductNames());
-            order.setRemarks(orderVO.getRemarks());
-            order.setCustomerVO(customerService.getCustomerVOById(orderVO.getCustomerId()));
-            orderList.add(order);
-        }
-        return orderList;
-    }
-    public List<Order> getOrderWithCustomer(){
-        List<OrderVO> orderVOList= orderDao.getOrderVOAll();
-        List<Order> orderList=new ArrayList<Order>();
-        for(OrderVO orderVO:orderVOList){
-            Order order=new Order();
-            order.setId(orderVO.getId());
-            order.setCreateTime(sdfTime.format(orderVO.getCreateTime()));
-            order.setProductNames(orderVO.getProductNames());
-            order.setRemarks(orderVO.getRemarks());
-            order.setCustomerVO(customerService.getCustomerVOById(orderVO.getCustomerId()));
-            orderList.add(order);
-        }
-        return orderList;
-    }
 
     public List<Order> getOrderWithCustomerByOrderSearch(OrderSearch orderSearch){
+        orderSearch.init();
         List<OrderVO> orderVOList= orderDao.getOrderVOByOrderSearch(orderSearch);
+        orderSearch.setCount(orderDao.getCountOrderVOByOrderSearch(orderSearch));
         List<Order> orderList=new ArrayList<Order>();
         for(OrderVO orderVO:orderVOList){
             Order order=new Order();
             order.setId(orderVO.getId());
-            order.setCreateTime(sdfTime.format(orderVO.getCreateTime()));
+            order.setCreateTime(DateUtil.format(orderVO.getCreateTime(), Base.DATE_PARSE_YYYYMMddHHmmss));
             order.setProductNames(orderVO.getProductNames());
             order.setRemarks(orderVO.getRemarks());
-            order.setCustomerVO(customerService.getCustomerVOById(orderVO.getCustomerId()));
+            order.setCustomerVO(customerService.getCustomerVOByIdCache(orderVO.getCustomerId()));
             orderList.add(order);
         }
         return orderList;

@@ -15,4 +15,5 @@ public interface OrderDao {
 
     public List<OrderVO> getOrderVOAll();
     public List<OrderVO> getOrderVOByOrderSearch(OrderSearch orderSearch);
+    public int getCountOrderVOByOrderSearch(OrderSearch orderSearch);
 }

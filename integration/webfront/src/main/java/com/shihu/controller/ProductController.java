@@ -1,8 +1,9 @@
 package com.shihu.controller;
 
-import com.shihu.model.HomePageBean;
+import com.shihu.exception.PagePromptException;
 import com.shihu.model.common.Car;
 import com.shihu.model.common.CarType;
+import com.shihu.model.common.HomePageBean;
 import com.shihu.model.common.Product;
 import com.shihu.model.common.VO.CarTypeVO;
 import com.shihu.model.common.VO.CarVO;
@@ -122,7 +123,6 @@ public class ProductController {
             productVO.setCarStr(cars);
             productService.addProduct(productVO,cars);
         }
-
         return modelAndView;
     }
 

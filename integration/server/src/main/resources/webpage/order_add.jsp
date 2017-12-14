@@ -7,6 +7,7 @@
             loadCustomer();
         });
     });
+
     var loadCustomer=function(){
         var customerName = $("#customerName").val();
         if ("" != customerName) {
@@ -60,8 +61,12 @@
         $.post("/ajax/order/add",
             getPostData(),
             function (data) {
-                if(null!=data&&"success"==data){
-                    location = "/order/list";
+                if(null!=data){
+                    if(1==data.state){
+                        location = "/order/search";
+                    }else {
+                        alert(data.info);
+                    }
                 };
             }
         );
@@ -72,12 +77,14 @@
         $.post("/ajax/order/save",
             getPostData(),
             function (data) {
-                if(null!=data&&"success"==data){
-                    alert("暂存成功");
+                if(null!=data){
+                    if(1==data.state){
+                        alert("暂存成功");
+                    }
                 };
             }
         );
-
+        return false;
     }
 
     var getPostData=function () {
@@ -93,13 +100,18 @@
             var orderProductVOList='orderProductVOList['+i+']';
             result[orderProductVOList+'.productId']=trObj.find("#productId").val();
             result[orderProductVOList+'.num']=trObj.find("span").html();
-            productNames=
+            if(i==trObjs.length-1){
+                productNames=productNames+trObj.find("#productName").html();
+            }else {
+                productNames=productNames+trObj.find("#productName").html()+",";
+            }
             result[orderProductVOList+'.num']=trObj.find("span").html();
             if(""!=trObj.find("#price").val()){
                 result[orderProductVOList+'.price']=trObj.find("#price").val();
             }
             result[orderProductVOList+'.sell']=trObj.find("select").val();
         }
+        result.productNames=productNames;
 
        // result.total;
         if(""!=$("#remarks").val()){
@@ -153,7 +165,7 @@
             <c:forEach items="${order.orderProductVOList}" varStatus="index" var="orderProductVO">
                 <tr>
                     <input type="hidden" id="productId" value="${productList[index.index].id}"/>
-                    <td>${productList[index.index].name}</td>
+                    <td id="productName">${productList[index.index].name}</td>
                     <td>${productList[index.index].version}</td>
                     <td>
                         <c:if test="${null!=user && user.hasAuthority('ProductAjaxController:addNum')}">

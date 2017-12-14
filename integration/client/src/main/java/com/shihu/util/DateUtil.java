@@ -21,4 +21,13 @@ public class DateUtil {
         }
         return null;
     }
+
+    public static String format(Date date,String parseStr){
+        SimpleDateFormat simpleDateFormat=simpleDateFormatMap.get(parseStr);
+        if(null==simpleDateFormat){
+            simpleDateFormat=new SimpleDateFormat(parseStr);
+            simpleDateFormatMap.put(parseStr,simpleDateFormat);
+        }
+        return  simpleDateFormat.format(date);
+    }
 }

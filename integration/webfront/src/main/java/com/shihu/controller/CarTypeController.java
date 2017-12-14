@@ -1,7 +1,8 @@
 package com.shihu.controller;
 
-import com.shihu.model.HomePageBean;
+import com.shihu.exception.PagePromptException;
 import com.shihu.base.Base;
+import com.shihu.model.common.HomePageBean;
 import com.shihu.model.common.VO.CarTypeVO;
 import com.shihu.service.CarTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,14 +21,14 @@ public class CarTypeController {
     private CarTypeService carTypeServer;
 
     @RequestMapping("/list")
-    public ModelAndView list(Integer errorInfoId){
+    public ModelAndView list(Integer pagePromptId){
         ModelAndView modelAndView=new ModelAndView("home");
         HomePageBean homePageBean=new HomePageBean(index,"cartype");
         modelAndView.addObject("page",homePageBean);
         List<CarTypeVO> carTypeList=  carTypeServer.getAllCarTypeVO();
         modelAndView.addObject("carTypeList",carTypeList);
-        if(null!=errorInfoId){
-            homePageBean.setErrorInfo(Base.getErrorInfo(errorInfoId).getInfo());
+        if(null!=pagePromptId){
+            homePageBean.setPagePromptException(PagePromptException.getPagePromptInfo(pagePromptId));
         }
 
         return modelAndView;
@@ -54,9 +55,13 @@ public class CarTypeController {
     @RequestMapping(value="/del/{id}")
     public ModelAndView delete(@PathVariable("id") Long id){
         ModelAndView modelAndView=new ModelAndView("redirect:/cartype/list");
-        boolean result=carTypeServer.deleteCarTypeById(id);
+        boolean result= false;
+        try {
+            carTypeServer.deleteCarTypeById(id);
+        } catch (PagePromptException e) {
+            modelAndView.addObject("pagePromptId", e.getId());
+        }
         if(!result){
-            modelAndView.addObject("errorInfoId", Base.CARTYPE_NOT_EMPTY.getId());
         }
         return modelAndView;
     }
@@ -64,12 +69,14 @@ public class CarTypeController {
     public ModelAndView add(CarTypeVO carTypeVO){
         ModelAndView modelAndView=new ModelAndView("redirect:/cartype/list");
         if(null!=carTypeVO.getName()&&carTypeVO.getName().length()>0){
-            boolean result=carTypeServer.addCarTypeVO(carTypeVO);
-            if(!result){
-                modelAndView.addObject("errorInfoId", Base.ADD_INFO_REPART.getId());
+            boolean result= false;
+            try {
+                carTypeServer.addCarTypeVO(carTypeVO);
+            } catch (PagePromptException e) {
+                modelAndView.addObject("pagePromptId", e.getId());
             }
         }else {
-            modelAndView.addObject("errorInfoId",Base.ADD_INFO_NOT_EMPTY.getId());
+            modelAndView.addObject("pagePromptId",PagePromptException.ADD_INFO_NOT_EMPTY);
         }
         return modelAndView;
     }

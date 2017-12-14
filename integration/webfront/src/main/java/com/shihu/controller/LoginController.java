@@ -1,6 +1,7 @@
 package com.shihu.controller;
 
 import com.shihu.base.Base;
+import com.shihu.exception.PagePromptException;
 import com.shihu.util.MD5Util;
 import com.shihu.model.common.User;
 import com.shihu.service.UserService;
@@ -30,7 +31,8 @@ public class LoginController {
                 User resultUser=userService.getUserByUP(user);
                 if(null==resultUser){//username password错误
                     modelAndView.setViewName("sign-in");
-                    modelAndView.addObject("errorinfo", Base.USER_PASSWORD_ERROR.getInfo());
+                    PagePromptException pagePromptException=PagePromptException.getPagePromptInfo(PagePromptException.USER_PASSWORD_ERROR);
+                    modelAndView.addObject("pagePromptException", pagePromptException);
                 }else {
                     session.setAttribute("user",resultUser);
                     modelAndView.setViewName("redirect:/home");

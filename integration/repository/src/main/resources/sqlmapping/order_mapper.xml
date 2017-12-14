@@ -10,16 +10,33 @@
 	<select id="getOrderVOByOrderSearch"  parameterType="com.shihu.model.common.OrderSearch" resultType="com.shihu.model.common.VO.OrderVO">
 		select * from order_ where 1=1
 		<if test="customerId!=null">
-			and customerid=customerId
+			and customerid=#{customerId}
 		</if>
-		<if test="productName!=null">
-			and productnames like #{productName}
+		<if test="productName!=null and ''!=productName">
+			and productnames like concat('%',#{productName},'%')
 		</if>
 		<if test="start!=null">
 			<![CDATA[ and createtime > #{start} ]]>
 		</if>
 		<if test="end!=null">
-			<![CDATA[  and createtime <= #{end} ]]>
+			<![CDATA[  and createtime < #{end} ]]>
+		</if>
+		order by createtime desc
+		limit #{pageStart},#{pageSize}
+	</select>
+	<select id="getCountOrderVOByOrderSearch"  parameterType="com.shihu.model.common.OrderSearch" resultType="int">
+		select count(*) from order_ where 1=1
+		<if test="customerId!=null">
+			and customerid=#{customerId}
+		</if>
+		<if test="productName!=null and ''!=productName">
+			and productnames like concat('%',#{productName},'%')
+		</if>
+		<if test="start!=null">
+			<![CDATA[ and createtime > #{start} ]]>
+		</if>
+		<if test="end!=null">
+			<![CDATA[  and createtime < #{end} ]]>
 		</if>
 	</select>
 

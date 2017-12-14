@@ -6,10 +6,10 @@
         });
     });
     var loadCar = function () {
-        var name = $("#name").val();
-        if ("" != name) {
+        var str = $("#str").val();
+        if ("" != str) {
             $.post("/ajax/car/saerchcarbyname",
-                {'str': $("#str").val()},
+                {'str': str},
                 function (data) {
                     if (null != data) {
                         var simpleCars = data;
@@ -53,7 +53,9 @@
     }
 
     var formSubmit = function () {
-        $("#tab").submit();
+        if(""!=$("#name").val()&&""!=$("#num").val()){
+            $("#tab").submit();
+        }
     }
 </script>
 
@@ -69,9 +71,9 @@
             <div class="tab-pane active in" id="home">
                 <form id="tab" action="/product/quickadd" method="post">
                     <label>商品名</label>
-                    <input type="text" name="name" value="${productVO.name}" class="input-xlarge">
+                    <input type="text" id="name" name="name" value="${productVO.name}" class="input-xlarge">
                     <label>个数</label>
-                    <input type="text" name="num" value="${productVO.num}" class="input-xlarge">
+                    <input type="text" id="num" name="num" value="${productVO.num}" class="input-xlarge">
                     <label>型号</label>
                     <input type="text" name="version" value="${productVO.version}" class="input-xlarge">
                     <label>批发价</label>
@@ -93,21 +95,5 @@
 
     </div>
 
-    <div class="modal small hide fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-         aria-hidden="true">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-            <h3 id="myModalLabel">Delete Confirmation</h3>
-        </div>
-        <div class="modal-body">
-
-            <p class="error-text"><i class="icon-warning-sign modal-icon"></i>Are you sure you want to delete the user?
-            </p>
-        </div>
-        <div class="modal-footer">
-            <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-            <button class="btn btn-danger" data-dismiss="modal">Delete</button>
-        </div>
-    </div>
 
 </div>

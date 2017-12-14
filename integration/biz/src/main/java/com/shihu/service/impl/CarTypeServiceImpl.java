@@ -1,5 +1,6 @@
 package com.shihu.service.impl;
 
+import com.shihu.exception.PagePromptException;
 import com.shihu.model.common.CarType;
 import com.shihu.model.common.VO.CarTypeVO;
 import com.shihu.model.common.VO.CarVO;
@@ -8,6 +9,7 @@ import com.shihu.mybatis.dao.CarTypeDao;
 import com.shihu.service.CarTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.List;
@@ -35,25 +37,25 @@ public class CarTypeServiceImpl implements CarTypeService {
         return list;
     }
 
-    public boolean deleteCarTypeById(Long id) {
+    @Transactional
+    public void deleteCarTypeById(Long id) throws  PagePromptException {
         List<CarVO> carVOs= carDao.getCarVOListByCarTypeId(id);
         if(null!=carVOs&&carVOs.size()>0){
-            return false;
+            throw new PagePromptException(PagePromptException.CARTYPE_NOT_EMPTY);
         }else {
             carTypeDao.deleteCarTypeById(id);
             getIdNameMap().remove(id);
-            return true;
         }
     }
 
-    public boolean addCarTypeVO(CarTypeVO carTypeVO) {
+    @Transactional
+    public void addCarTypeVO(CarTypeVO carTypeVO) throws PagePromptException {
         CarTypeVO c=carTypeDao.getCarTypeVOByName(carTypeVO.getName());
         if(null==c){
             carTypeDao.addCarTypeVO(carTypeVO);
             getIdNameMap().put(carTypeVO.getId(),carTypeVO);
-            return true;
         }else {
-            return false;
+            throw new PagePromptException(PagePromptException.ADD_INFO_REPART);
         }
     }
 

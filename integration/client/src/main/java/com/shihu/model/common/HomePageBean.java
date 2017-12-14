@@ -1,21 +1,23 @@
-package com.shihu.model;
+package com.shihu.model.common;
+
+import com.shihu.exception.PagePromptException;
 
 public class HomePageBean {
     private int index;
     private String includePage;
-    private String errorInfo;
+    private PagePromptException pagePromptException;
 
     public HomePageBean(int index, String includePage) {
         this.index = index;
         this.includePage = includePage;
     }
 
-    public String getErrorInfo() {
-        return errorInfo;
+    public PagePromptException getPagePromptException() {
+        return pagePromptException;
     }
 
-    public HomePageBean setErrorInfo(String errorInfo) {
-        this.errorInfo = errorInfo;
+    public HomePageBean setPagePromptException(PagePromptException pagePromptException) {
+        this.pagePromptException = pagePromptException;
         return this;
     }
 

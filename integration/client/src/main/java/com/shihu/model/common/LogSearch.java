@@ -6,13 +6,10 @@ import com.shihu.util.DateUtil;
 import java.util.Calendar;
 import java.util.Date;
 
-public class OrderSearch {
-    private Long customerId;
-    private String customerName;
-    private String productName;
+public class LogSearch {
     private Integer pageNum;
     private Integer pageStart;
-    private Integer pageSize=10;
+    private Integer pageSize=100;
     private Integer count;
     private String startDate;
     private String endDate;
@@ -28,10 +25,9 @@ public class OrderSearch {
             pageStart=(pageNum-1)*pageSize;
         }
     }
-
     public void conversionDate(){
         if(validateDateString(startDate)){
-            start=DateUtil.parse(startDate, Base.DATE_PARSE_yyyyMMdd);
+            start= DateUtil.parse(startDate, Base.DATE_PARSE_yyyyMMdd);
         }
         if(validateDateString(endDate)){
             end=DateUtil.parse(endDate, Base.DATE_PARSE_yyyyMMdd);
@@ -66,84 +62,24 @@ public class OrderSearch {
         return  true;
     }
 
-    public Integer getPageStart() {
-        return pageStart;
-    }
 
-    public OrderSearch setPageStart(Integer pageStart) {
-        this.pageStart = pageStart;
-        return this;
-    }
 
-    public Long getCustomerId() {
-        return customerId;
-    }
-
-    public OrderSearch setCustomerId(Long customerId) {
-        this.customerId = customerId;
-        return this;
-    }
-
-    public String getCustomerName() {
-        return customerName;
-    }
-
-    public OrderSearch setCustomerName(String customerName) {
-        this.customerName = customerName;
-        return this;
-    }
-
-    public String getProductName() {
-        return productName;
-    }
-
-    public OrderSearch setProductName(String productName) {
-        this.productName = productName;
-        return this;
-    }
-
-    public String getStartDate() {
-        return startDate;
-    }
-
-    public OrderSearch setStartDate(String startDate) {
-        this.startDate = startDate;
-        return this;
-    }
-
-    public String getEndDate() {
-        return endDate;
-    }
-
-    public OrderSearch setEndDate(String endDate) {
-        this.endDate = endDate;
-        return this;
-    }
-
-    public Date getStart() {
-        return start;
-    }
-
-    public OrderSearch setStart(Date start) {
-        this.start = start;
-        return this;
-    }
-
-    public Date getEnd() {
-        return end;
-    }
-
-    public OrderSearch setEnd(Date end) {
-        this.end = end;
-        return this;
-    }
 
     public Integer getPageNum() {
         return pageNum;
     }
 
-    public OrderSearch setPageNum(Integer pageNum) {
+    public LogSearch setPageNum(Integer pageNum) {
         this.pageNum = pageNum;
+        return this;
+    }
+
+    public Integer getPageStart() {
+        return pageStart;
+    }
+
+    public LogSearch setPageStart(Integer pageStart) {
+        this.pageStart = pageStart;
         return this;
     }
 
@@ -151,7 +87,7 @@ public class OrderSearch {
         return pageSize;
     }
 
-    public OrderSearch setPageSize(Integer pageSize) {
+    public LogSearch setPageSize(Integer pageSize) {
         this.pageSize = pageSize;
         return this;
     }
@@ -160,8 +96,45 @@ public class OrderSearch {
         return count;
     }
 
-    public OrderSearch setCount(Integer count) {
+    public LogSearch setCount(Integer count) {
         this.count = count;
         return this;
     }
+
+    public String getStartDate() {
+        return startDate;
+    }
+
+    public LogSearch setStartDate(String startDate) {
+        this.startDate = startDate;
+        return this;
+    }
+
+    public String getEndDate() {
+        return endDate;
+    }
+
+    public LogSearch setEndDate(String endDate) {
+        this.endDate = endDate;
+        return this;
+    }
+
+    public Date getStart() {
+        return start;
+    }
+
+    public LogSearch setStart(Date start) {
+        this.start = start;
+        return this;
+    }
+
+    public Date getEnd() {
+        return end;
+    }
+
+    public LogSearch setEnd(Date end) {
+        this.end = end;
+        return this;
+    }
+
 }

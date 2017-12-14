@@ -94,8 +94,9 @@
                 <ul id="accounts-menu" class="nav nav-list collapse in">
 
 
-                    <li <c:if test="${page.index==11}">class="active"</c:if> ><a href="/order/list">订单管理</a></li>
+                    <li <c:if test="${page.index==11}">class="active"</c:if> ><a href="/order/search">订单管理</a></li>
                     <li <c:if test="${page.index==12}">class="active"</c:if> ><a href="/customer/list">客户管理</a></li>
+                    <li <c:if test="${page.index==13}">class="active"</c:if> ><a href="/log/search">查看日志</a></li>
 
 
                 </ul>

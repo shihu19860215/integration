@@ -11,18 +11,14 @@ import java.util.List;
 
 public interface ProductService {
     public List<Product> getProductListByCarId(Long carId);
-    @Transactional
     public void addProduct(ProductVO productVO,List<CarVO> cars);
     public Product getProductById(Long id);
     public Product getDisplayProductById(Long id);
     public Product getProductByIdWithCarTypeName(Long id);
     public int addProductNum(Long id);
     public int subProductNum(Long id);
-    @Transactional
     public void updateProduct(ProductVO productVO,Long[] carIds,Long carId);
-    @Transactional
     public void updateProduct(ProductVO productVO,Long[] carIds);
-    @Transactional
     public void updateProduct(ProductVO productVO,String[] carIds);
     public void delProduct(Long id);
     public List<Product> searchProduct(String carName,String productName,String productVersion,String sort);

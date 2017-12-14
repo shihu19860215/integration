@@ -17,7 +17,8 @@ import java.util.Map;
 @Controller
 @RequestMapping("/ajax/car")
 public class CarAjaxController {
-    public static Gson gson=new Gson();
+    @Autowired
+    public Gson gson;
     @Autowired
     private CarService carService;
 

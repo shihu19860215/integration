@@ -12,6 +12,12 @@
 
 
 
+    <context:component-scan base-package="com.shihu.mybatis.dao"/>
+
+    <context:component-scan base-package="com.shihu.service"/>
+    <context:component-scan base-package="com.shihu.interceptor"/>
+    <bean class="com.google.gson.Gson"/>
+
 <!-- datasource -->
     <import resource="classpath:/source/mallportal.xml" />
 

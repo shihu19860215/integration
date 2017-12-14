@@ -1,5 +1,6 @@
 package com.shihu.service.impl;
 
+import com.shihu.exception.PagePromptException;
 import com.shihu.model.common.Car;
 import com.shihu.model.common.CarType;
 import com.shihu.model.common.VO.CarTypeVO;
@@ -11,6 +12,7 @@ import com.shihu.service.CarService;
 import com.shihu.service.CarTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,25 +38,25 @@ public class CarServiceImpl implements CarService {
         return carDao.getCarVOListByCarTypeId(carTypeId);
     }
 
-    public boolean deleteCarById(Long id) {
+    @Transactional
+    public void deleteCarById(Long id) throws  PagePromptException {
         int count=carProductDao.getCountByCarId(id);
         if(count>0){
-            return false;
+            throw new PagePromptException(PagePromptException.CAR_NOT_EMPTY);
         }else {
             carDao.deleteCarById(id);
             getIdNameMap().remove(id);
-            return  true;
         }
     }
 
-    public boolean addCarVO(CarVO carVO) {
+    @Transactional
+    public void addCarVO(CarVO carVO) throws  PagePromptException{
         CarVO c=carDao.getCarVOByName(carVO.getName());
         if(null==c){
             carDao.addCarVO(carVO);
             getIdNameMap().put(carVO.getId(),carVO);
-            return true;
         }else {
-            return false;
+            throw new PagePromptException(PagePromptException.ADD_INFO_REPART);
         }
     }
 
@@ -79,12 +81,6 @@ public class CarServiceImpl implements CarService {
 
     }
 
-    public Map<Long,CarVO> getIdNameMap(){
-        if (null==idNameMap){
-            setIdNameMap();
-        }
-        return idNameMap;
-    }
 
     public List<CarVO> setCarNameWithCarType(List<CarVO> list){
         List<CarVO> carVOs=new ArrayList<CarVO>(list.size());
@@ -106,5 +102,11 @@ public class CarServiceImpl implements CarService {
         for(CarVO c:list){
             idNameMap.put(c.getId(),c);
         }
+    }
+    private Map<Long,CarVO> getIdNameMap(){
+        if (null==idNameMap){
+            setIdNameMap();
+        }
+        return idNameMap;
     }
 }

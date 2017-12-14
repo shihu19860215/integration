@@ -8,8 +8,10 @@
                 "id":${order.id}
             },
             function (data) {
-                if(null!=data&&"success"==data){
-                    alert("保存成功");
+                if(null!=data){
+                    if(1==data.state){
+                        alert("保存成功");
+                    }
                 };
             }
         );

@@ -11,3 +11,6 @@ delete from car_product where id in
 */
 
 在数据库手动添加一个(个人客户),ID 为1 name为个人
+
+数据库log 修改time 字段为createtime
+增加order_ order_product表

@@ -1,15 +1,12 @@
 package com.shihu.controller.ajax;
 
 import com.google.gson.Gson;
-import com.shihu.model.HomePageBean;
 import com.shihu.model.common.VO.ProductVO;
 import com.shihu.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -20,7 +17,8 @@ import java.util.Map;
 @Controller
 @RequestMapping("/ajax/product")
 public class ProductAjaxController {
-    public static Gson gson=new Gson();
+    @Autowired
+    private Gson gson;
     @Autowired
     private ProductService productService;
 

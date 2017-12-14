@@ -17,11 +17,6 @@
 
     <context:component-scan base-package="com.shihu.controller"/>
 
-    <context:component-scan base-package="com.shihu.mybatis.dao"/>
-
-    <context:component-scan base-package="com.shihu.service"/>
-    <context:component-scan base-package="com.shihu.interceptor"/>
-
     <!--3.1之后新RequestMappingHandler，拦截器可获取到mothod-->
     <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping"/>
     <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter"/>
@@ -30,8 +25,6 @@
         <bean class="com.shihu.interceptor.AuthorityValidateInterceptor"/>
     </mvc:interceptors>
 
-    <bean class="com.google.gson.Gson"/>
-    <bean class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor"/>
 
     <!-- ViewResolver -->
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">

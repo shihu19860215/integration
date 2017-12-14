@@ -1,6 +1,6 @@
 package com.shihu.controller;
 
-import com.shihu.model.HomePageBean;
+import com.shihu.model.common.HomePageBean;
 import com.shihu.model.common.Product;
 import com.shihu.model.common.VO.CarVO;
 import com.shihu.model.common.VO.ProductVO;
