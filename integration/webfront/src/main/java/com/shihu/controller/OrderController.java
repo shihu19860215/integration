@@ -8,6 +8,7 @@ import com.shihu.model.common.VO.OrderProductVO;
 import com.shihu.service.CustomerService;
 import com.shihu.service.OrderService;
 import com.shihu.service.ProductService;
+import com.shihu.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,6 +31,8 @@ public class OrderController {
     private CustomerService customerService;
     @Autowired
     private OrderService orderService;
+    @Autowired
+    private StringUtil stringUtil;
     @RequestMapping("/toaddpage")
     public ModelAndView toAddPage(HttpSession session){
         ModelAndView modelAndView=new ModelAndView("home");
@@ -57,7 +60,6 @@ public class OrderController {
                 order.setCustomerVO(customerService.getCustomerVOByIdCache(order.getCustomerVO().getId()));
             }
         }
-
         return modelAndView;
     }
 
@@ -79,6 +81,7 @@ public class OrderController {
         List<Order> orderList=orderService.getOrderWithCustomerByOrderSearch(orderSearch);
         modelAndView.addObject("orderList",orderList);
 
+        modelAndView.addObject("stringUtil",stringUtil);
         return modelAndView;
     }
 

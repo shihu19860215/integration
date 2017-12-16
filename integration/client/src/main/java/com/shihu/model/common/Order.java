@@ -1,9 +1,6 @@
 package com.shihu.model.common;
 
-import com.shihu.model.common.VO.CustomerVO;
-import com.shihu.model.common.VO.OrderProductAndProductVO;
-import com.shihu.model.common.VO.OrderProductVO;
-import com.shihu.model.common.VO.OrderVO;
+import com.shihu.model.common.VO.*;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -14,6 +11,7 @@ public class Order {
     private CustomerVO customerVO;
     private List<OrderProductVO> orderProductVOList;
     private List<OrderProduct> orderProductList;
+    private List<OtherProductVO> otherProductVOList;
     private Integer total;
     private String productNames;
     private String remarks;
@@ -54,6 +52,15 @@ public class Order {
 
     public Order setOrderProductList(List<OrderProduct> orderProductList) {
         this.orderProductList = orderProductList;
+        return this;
+    }
+
+    public List<OtherProductVO> getOtherProductVOList() {
+        return otherProductVOList;
+    }
+
+    public Order setOtherProductVOList(List<OtherProductVO> otherProductVOList) {
+        this.otherProductVOList = otherProductVOList;
         return this;
     }
 
@@ -105,7 +112,7 @@ public class Order {
     public Order() {
     }
 
-    public Order(OrderVO orderVO, CustomerVO customerVO, List<OrderProductAndProductVO> orderProductAndProductVOList) {
+    public Order(OrderVO orderVO, CustomerVO customerVO, List<OrderProductAndProductVO> orderProductAndProductVOList,List<OtherProductVO> otherProductVOList) {
         this.id=orderVO.getId();
         this.customerVO = customerVO;
         this.total = orderVO.getTotal();
@@ -117,5 +124,6 @@ public class Order {
             orderProductList.add(orderProduct);
         }
         this.orderProductList=orderProductList;
+        this.otherProductVOList=otherProductVOList;
     }
 }

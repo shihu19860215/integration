@@ -2,7 +2,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.shihu.mybatis.dao.AuthorityDao">
 	<select id="getAuthorityStrByUserId" parameterType="long" resultType="String">
-		select concat(a.controller,":",a.method) from authority as a join user_authority as ua on a.id=ua.authorityId where ua.userid=#{id};
+		select concat(a.controller,":",a.method) from authority as a
+			join team_authority as ta on a.id=ta.authorityId
+			join team as t on t.id=ta.teamid
+			join user as u on u.teamid=t.id
+			where u.id=#{id};
 	</select>
 	<select id="getAuthorityStrAll" resultType="String">
 		select concat(controller,":",method) from authority;

@@ -2,19 +2,23 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <script type="text/javascript">
     var saveRemarks=function () {
-        $.post("/ajax/order/saveremarks",
-            {
-                "remarks":$("#remarks").val(),
-                "id":${order.id}
-            },
-            function (data) {
-                if(null!=data){
-                    if(1==data.state){
-                        alert("保存成功");
-                    }
-                };
-            }
-        );
+        if (confirm('确定要修改备注嘛?')) {
+            $.post("/ajax/order/saveremarks",
+                {
+                    "remarks":$("#remarks").val(),
+                    "id":${order.id}
+                },
+                function (data) {
+                    if(null!=data){
+                        if(1==data.state){
+                            alert("保存成功");
+                        }
+                    };
+                }
+            );
+        } else {
+            return false;
+        }
         
     }
 
@@ -25,6 +29,9 @@
     <p class="block-heading" data-toggle="collapse" data-target="#chart-container">订单详情</p>
     <h3>客户名:${order.customerVO.name}</h3>
     <div class="well">
+        <ul class="breadcrumb" style="width: 58px;">
+            <li class="active">专用商品</li>
+        </ul>
         <table class="table">
             <thead>
             <tr>
@@ -54,6 +61,32 @@
             </c:forEach>
 
             </tbody>
+        </table>
+    </div>
+    <div class="well">
+        <ul class="breadcrumb" style="width: 58px;">
+            <li class="active">其他商品</li>
+        </ul>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>商品名</th>
+                <th>数量</th>
+                <th>单价</th>
+            </tr>
+            </thead>
+            <tbody id="tbody2">
+            <c:forEach items="${order.otherProductVOList}" varStatus="index" var="otherProductVO">
+                <tr>
+                    <td>${otherProductVO.name}</td>
+                    <td>${otherProductVO.num}${otherProductVO.unit}</td>
+                    <td>${otherProductVO.price}</td>
+                </tr>
+
+            </c:forEach>
+
+            </tbody>
+
         </table>
     </div>
     <div class="btn-toolbar">

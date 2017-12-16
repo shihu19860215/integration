@@ -8,6 +8,7 @@ import com.shihu.model.common.Product;
 import com.shihu.model.common.VO.*;
 import com.shihu.mybatis.dao.OrderDao;
 import com.shihu.mybatis.dao.OrderProductDao;
+import com.shihu.mybatis.dao.OtherProductDao;
 import com.shihu.mybatis.dao.ProductDao;
 import com.shihu.service.CustomerService;
 import com.shihu.service.OrderService;
@@ -31,6 +32,8 @@ public class OrderServiceImpl implements OrderService {
     private ProductDao productDao;
     @Autowired
     private CustomerService customerService;
+    @Autowired
+    private OtherProductDao otherProductDao;
 
     @Transactional
     public void addOrder(Order order) throws PagePromptException{
@@ -42,19 +45,28 @@ public class OrderServiceImpl implements OrderService {
             OrderVO orderVO=new OrderVO(order.getCustomerVO().getId(),order.getTotal(),order.getProductNames(),order.getRemarks());
             orderDao.addOrderVO(orderVO);
             List<OrderProductVO> orderProductVOList=order.getOrderProductVOList();
-            for(int i=0;i<orderProductVOList.size();i++){
-                OrderProductVO orderProductVO=orderProductVOList.get(i);
-                ProductVO productVO=productDao.getDisplayProductVOById(orderProductVO.getProductId());
-                if(null==productVO){
-                    throw  new PagePromptException(PagePromptException.ADD_ORDER_ERROR_PRODCUT_INVAILD);
+            if(null!=orderProductVOList&&orderProductVOList.size()>0){
+                for(int i=0;i<orderProductVOList.size();i++){
+                    OrderProductVO orderProductVO=orderProductVOList.get(i);
+                    ProductVO productVO=productDao.getDisplayProductVOById(orderProductVO.getProductId());
+                    if(null==productVO){
+                        throw  new PagePromptException(PagePromptException.ADD_ORDER_ERROR_PRODCUT_INVAILD);
+                    }
+                    if(orderProductVO.isSell()&&orderProductVO.getNum()>productVO.getNum()){
+                        throw  new PagePromptException(PagePromptException.ADD_ORDER_ERROR_PRODCUT_NUM_LESS);
+                    }
+                    productVO.setNum(productVO.getNum()-orderProductVO.getNum());
+                    productDao.updateProdectNumById(productVO);
+                    orderProductVO.setOrderId(orderVO.getId());
+                    orderProductDao.addOrderProductVO(orderProductVO);
                 }
-                if(orderProductVO.isSell()&&orderProductVO.getNum()>productVO.getNum()){
-                    throw  new PagePromptException(PagePromptException.ADD_ORDER_ERROR_PRODCUT_NUM_LESS);
+            }
+            List<OtherProductVO> otherProductVOList=order.getOtherProductVOList();
+            if(null!=otherProductVOList&&otherProductVOList.size()>0){
+                for(int i=0;i<otherProductVOList.size();i++){
+                    otherProductVOList.get(i).setOrderId(orderVO.getId());
+                    otherProductDao.addOtherProductVO(otherProductVOList.get(i));
                 }
-                productVO.setNum(productVO.getNum()-orderProductVO.getNum());
-                productDao.updateProdectNumById(productVO);
-                orderProductVO.setOrderId(orderVO.getId());
-                orderProductDao.addOrderProductVO(orderProductVO);
             }
         };
     }
@@ -63,7 +75,8 @@ public class OrderServiceImpl implements OrderService {
         OrderVO orderVO=orderDao.getOrderVOById(id);
         CustomerVO customerVO=customerService.getCustomerVOByIdCache(orderVO.getId());
         List<OrderProductAndProductVO> orderProductAndProductVOList= orderProductDao.getOrderProductAndProductVOListByOrderId(id);
-        Order order=new Order(orderVO,customerVO,orderProductAndProductVOList);
+        List<OtherProductVO> otherProductVOList=otherProductDao.getOtherProductVOListByOrderId(id);
+        Order order=new Order(orderVO,customerVO,orderProductAndProductVOList,otherProductVOList);
         return order;
     }
 

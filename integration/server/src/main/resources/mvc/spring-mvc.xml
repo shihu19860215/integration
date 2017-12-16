@@ -33,4 +33,10 @@
         <property name="suffix" value=".jsp"/>
     </bean>
 
+
+
+
+    <bean class="com.google.gson.Gson"/>
+    <bean class="com.shihu.util.StringUtil"/>
+
 </beans>

@@ -205,10 +205,12 @@
                                     <i class="icon-remove"></i>
                                 </a>
                             </c:if>
+                            <c:if test="${product.num>0&&user.hasAuthority('OrderAjaxController:addProduct')}">
                             <a onclick="addToOrder(${product.id},this)"  role="button"
                                data-toggle="modal">
                                 <i class="icon-shopping-cart"></i>
                             </a>
+                            </c:if>
                         </td>
                     </c:if>
                 </tr>

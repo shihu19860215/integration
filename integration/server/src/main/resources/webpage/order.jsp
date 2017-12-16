@@ -143,9 +143,9 @@
                 <tr>
                     <td>${i.index+1}</td>
                     <td>${order.createTime}</td>
-                    <td>${order.customerVO.name}</td>
-                    <td>${order.productNames}</td>
-                    <td>${order.remarks}</td>
+                    <td>${stringUtil.toCutString(order.customerVO.name,12)}</td>
+                    <td>${stringUtil.toCutString(order.productNames,50)}</td>
+                    <td>${stringUtil.toCutString(order.remarks,16)}</td>
                     <td><a href="/order/${order.id}">详情</a></td>
                 </tr>
             </c:forEach>
