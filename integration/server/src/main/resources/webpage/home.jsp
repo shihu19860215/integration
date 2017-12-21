@@ -71,7 +71,7 @@
                 </li>
 
             </ul>
-            <a class="brand" href="index.html"><span class="first">Your</span> <span class="second">Company</span></a>
+            <a class="brand" href="/"><span class="first">Your</span> <span class="second">Company</span></a>
         </div>
     </div>
 </div>

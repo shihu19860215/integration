@@ -3,26 +3,33 @@
 <script type="text/javascript">
     var maxlength=10;
     $(function () {
-        $("#cutomerStr").keyup(function () {
+        $("#str").keyup(function () {
             loadCustomer();
             $("#customerId").val("");
         });
         $("#customerSelect").change(function(){
-            $("#customerName").val($(this).find("option:selected").html());
+            $("#customerNameOrTel").val($(this).find("option:selected").html());
             $("#customerId").val($(this).find("option:selected").val());
         });
         initPage(${orderSearch.pageNum},${orderSearch.count},${orderSearch.pageSize});
     });
     var loadCustomer=function(){
-        var cutomerStr = $("#cutomerStr").val();
-        if ("" != cutomerStr) {
+        var str = $("#str").val();
+        if ("" != str) {
             $.post("/ajax/customer/saerchlikename",
-                {'customerName': cutomerStr},
+                {'customerNameOrTel': str},
                 function (data) {
                     if (null != data) {
-                        var tmp="<option>全部</option>";
+                        var tmp="<option value=\"1\">个人</option>";
                         for (var i = 0; i < data.length; i++) {
-                            tmp += "<option value='" + data[i].id + "'>" + data[i].name + "</option>";
+                            var str=data[i].name;
+                            if(null!=data[i].area&&""!=data[i].area.trim()){
+                                str=data[i].area+"-"+str;
+                            }
+                            if(null!=data[i].telephone&&""!=data[i].telephone.trim()){
+                                str=str+"-"+data[i].telephone;
+                            }
+                            tmp += "<option value='" + data[i].id + "'>" +str+ "</option>";
                         }
                         ;
                         $("#customerSelect").html(tmp);
@@ -85,40 +92,41 @@
         }
     }
     var clearAll=function () {
-        $("#cutomerStr").val("");
+        $("#str").val("");
         $("#pageNum").val("");
         $("#productName").val("");
         $("#startDate").val("");
         $("#endDate").val("");
         $("#customerId").val("");
-        $("#customerSelect").html("<option>全部</option>");
+        $("#customerSelect").html("<option value=\"1\">个人</option>");
     }
 </script>
 
 <div>
     <div class="btn-toolbar">
         <form id="searchFrom" class="form-inline" action="/order/search" method="post">
-            <input id="cutomerStr" type="text" class="input-small" placeholder="客户名"  style="width: 60px;">
+            <input id="str" type="text" class="input-small" placeholder="客户名"  style="width:90px;">
             <input id="pageNum" type="hidden" name="pageNum">
             <c:choose>
                 <c:when test="${null!=orderSearch&&null!=orderSearch.customerId}">
-                    <input id="customerName" type="hidden" name="customerName" value="${orderSearch.customerName}">
+                    <input id="customerNameOrTel" type="hidden" name="customerNameOrTel" value="${orderSearch.customerNameOrTel}">
                     <input id="customerId" type="hidden" name="customerId" value="${orderSearch.customerId}">
-                    <select style="width: 120px;" id="customerSelect">
-                        <option value="${orderSearch.customerId}">${orderSearch.customerName}</option>
+                    <select style="width: 280px;" id="customerSelect">
+                        <option value="${orderSearch.customerId}">${orderSearch.customerNameOrTel}</option>
                     </select>
                 </c:when>
                 <c:otherwise>
-                    <input id="customerName" type="hidden" name="customerName">
+                    <input id="customerNameOrTel" type="hidden" name="customerNameOrTel">
                     <input id="customerId" type="hidden" name="customerId">
-                    <select style="width: 120px;" id="customerSelect">
-                        <option>全部</option>
+                    <select style="width: 280px;" id="customerSelect">
+                        <option value="1">个人</option>
                     </select>
                 </c:otherwise>
             </c:choose>
             <input type="text" id="productName" name="productName" value="${orderSearch.productName}" class="input-small" placeholder="商品名"  style="width: 80px;">
-            <input type="text"id="startDate" name="startDate" value="${orderSearch.startDate}" class="input-small" placeholder="开始日期:例20170501"  style="width: 140px;">
-            <input type="text"id="endDate" name="endDate" value="${orderSearch.endDate}" class="input-small" placeholder="结束日期:例20170601"  style="width: 140px;">
+            <input type="text"id="startDate" name="startDate" value="${orderSearch.startDate}" class="input-small" placeholder="开始日期"  style="width: 70px;">
+            <input type="text"id="endDate" name="endDate" value="${orderSearch.endDate}" class="input-small" placeholder="结束日期"  style="width: 70px;">
+            <select name="retreat" style="width: 95px;"><option value="false">全部</option><option value="1" <c:if test="${orderSearch.retreat}"> selected = "selected"</c:if>>有退换货</option></select>
             <input type="submit" class="btn" value="搜索"></input>
             <input type="reset" onclick="return clearAll()" class="btn" value="清除"></input>
         </form>

@@ -11,17 +11,19 @@ public class OrderVO {
     private Integer total;
     private String productNames;
     private String remarks;
+    private Boolean retreat;//是否有退货
     private Boolean valid;//有效的
     private Date createTime;// 创建时间
 
     public OrderVO() {
     }
 
-    public OrderVO(Long customerId, Integer total, String productNames,String remarks) {
+    public OrderVO(Long customerId, Integer total, String productNames,String remarks,Boolean retreat) {
         this.customerId = customerId;
         this.total = total;
         this.productNames=productNames;
         this.remarks = remarks;
+        this.retreat=retreat;
     }
 
     public Long getId() {
@@ -57,6 +59,15 @@ public class OrderVO {
 
     public OrderVO setRemarks(String remarks) {
         this.remarks = remarks;
+        return this;
+    }
+
+    public Boolean getRetreat() {
+        return retreat;
+    }
+
+    public OrderVO setRetreat(Boolean retreat) {
+        this.retreat = retreat;
         return this;
     }
 

@@ -4,21 +4,28 @@
 	<select id="getCustomerVOAll" resultType="com.shihu.model.common.VO.CustomerVO">
 		select * from customer
 	</select>
+	<select id="getCustomerVODisplayAll" resultType="com.shihu.model.common.VO.CustomerVO">
+		select * from customer where display=true order by id desc
+	</select>
 	<select id="getCustomerVOById" parameterType="long" resultType="com.shihu.model.common.VO.CustomerVO">
 		select * from customer where id=#{id}
 	</select>
-	<select id="getCustomerVOIdNameListLikeName" parameterType="string" resultType="com.shihu.model.common.VO.CustomerVO">
-		select id,name from customer where name like #{name}
+	<select id="getCustomerVOListLikeNameOrTel" parameterType="string" resultType="com.shihu.model.common.VO.CustomerVO">
+		select id,name,telephone,area from customer where
+			(name like #{customerNameOrTel} or telephone like #{customerNameOrTel} or telephone2 like #{customerNameOrTel})
+			and display=TRUE
 	</select>
 
 
-
 	<insert id="addCustomerVO" parameterType="com.shihu.model.common.VO.CarVO">
-		insert into customer(name,telephone,telephone2,area,address) values(#{name},#{telephone},#{telephone2},#{area},#{address})
+		insert into customer(name,telephone,telephone2,area,address,display) values(#{name},#{telephone},#{telephone2},#{area},#{address},true)
 	</insert>
 	<update id="updateCustomerVO" parameterType="com.shihu.model.common.VO.CustomerVO">
 		update customer set name=#{name},telephone=#{telephone},telephone2=#{telephone2},area=#{area}
 		,address=#{address} where id=#{id}
+	</update>
+	<update id="unDisplayCustomerVO" parameterType="com.shihu.model.common.VO.CustomerVO">
+		update customer set display=false where id=#{id}
 	</update>
 	<delete id="delCustomerById" parameterType="long">
 		delete from customer where id=#{id}

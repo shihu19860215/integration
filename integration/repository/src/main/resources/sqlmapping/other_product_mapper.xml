@@ -6,7 +6,7 @@
 	</select>
 
 	<insert id="addOtherProductVO" parameterType="com.shihu.model.common.VO.OtherProductVO">
-		insert into other_product(orderid,name,num,unit,price) values(#{orderId},#{name},#{num},#{unit},#{price})
+		insert into other_product(orderid,name,num,unit,price,sell) values(#{orderId},#{name},#{num},#{unit},#{price},#{sell})
 	</insert>
 
 </mapper>

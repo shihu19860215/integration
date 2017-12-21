@@ -6,9 +6,10 @@ import java.util.List;
 
 public interface CustomerDao {
     public List<CustomerVO> getCustomerVOAll();
+    public List<CustomerVO> getCustomerVODisplayAll();
     public void addCustomerVO(CustomerVO customerVO);
     public void updateCustomerVO(CustomerVO customerVO);
-    public void delCustomerById(Long id);
+    public void unDisplayCustomerVO(Long id);
     public CustomerVO getCustomerVOById(Long id);
-    public List<CustomerVO> getCustomerVOIdNameListLikeName(String name);
+    public List<CustomerVO> getCustomerVOListLikeNameOrTel(String customerNameOrTel);
 }

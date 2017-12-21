@@ -22,8 +22,8 @@ public class CustomerAjaxController {
     private CustomerService customerService;
 
     @RequestMapping("/saerchlikename")
-    public void searchLikeName(HttpServletResponse response, String customerName){
-        List<CustomerVO> list=customerService.getCustomerVOIdNameListLikeName(customerName);
+    public void searchLikeName(HttpServletResponse response, String customerNameOrTel){
+        List<CustomerVO> list=customerService.getCustomerVOListLikeNameOrTel(customerNameOrTel);
         if(null==list)list=new ArrayList<CustomerVO>(0);
         try {
             //设置页面不缓存

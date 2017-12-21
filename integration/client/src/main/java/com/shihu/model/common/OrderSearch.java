@@ -8,8 +8,10 @@ import java.util.Date;
 
 public class OrderSearch {
     private Long customerId;
-    private String customerName;
+    private String customerNameOrTel;
     private String productName;
+    private String productRemarks;
+    private Boolean retreat;//有退货
     private Integer pageNum;
     private Integer pageStart;
     private Integer pageSize=10;
@@ -26,6 +28,9 @@ public class OrderSearch {
             pageStart=0;
         }else {
             pageStart=(pageNum-1)*pageSize;
+        }
+        if(null==retreat){
+            retreat=false;
         }
     }
 
@@ -84,12 +89,12 @@ public class OrderSearch {
         return this;
     }
 
-    public String getCustomerName() {
-        return customerName;
+    public String getCustomerNameOrTel() {
+        return customerNameOrTel;
     }
 
-    public OrderSearch setCustomerName(String customerName) {
-        this.customerName = customerName;
+    public OrderSearch setCustomerNameOrTel(String customerNameOrTel) {
+        this.customerNameOrTel = customerNameOrTel;
         return this;
     }
 
@@ -99,6 +104,24 @@ public class OrderSearch {
 
     public OrderSearch setProductName(String productName) {
         this.productName = productName;
+        return this;
+    }
+
+    public String getProductRemarks() {
+        return productRemarks;
+    }
+
+    public OrderSearch setProductRemarks(String productRemarks) {
+        this.productRemarks = productRemarks;
+        return this;
+    }
+
+    public Boolean getRetreat() {
+        return retreat;
+    }
+
+    public OrderSearch setRetreat(Boolean retreat) {
+        this.retreat = retreat;
         return this;
     }
 

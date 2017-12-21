@@ -21,7 +21,7 @@ import java.util.Map;
 
 @Service
 public class CarServiceImpl implements CarService {
-    private Map<Long,CarVO> idNameMap;
+    private Map<Long,CarVO> idCarVOMap;
     @Autowired
     private CarTypeService carTypeService;
     @Autowired
@@ -31,7 +31,14 @@ public class CarServiceImpl implements CarService {
 
 
     public CarVO getCarVOByIdCache(Long id) {
-        return getIdNameMap().get(id);
+        CarVO carVO=getIdCarVOMap().get(id);
+        if(null==carVO){
+            carVO=carDao.getCarVOById(id);
+            if(null!=carVO){
+                getIdCarVOMap().put(id,carVO);
+            }
+        }
+        return carVO;
     }
 
     public List<CarVO> getCarVOListByCarTypeId(Long carTypeId) {
@@ -45,7 +52,7 @@ public class CarServiceImpl implements CarService {
             throw new PagePromptException(PagePromptException.CAR_NOT_EMPTY);
         }else {
             carDao.deleteCarById(id);
-            getIdNameMap().remove(id);
+            getIdCarVOMap().remove(id);
         }
     }
 
@@ -54,7 +61,7 @@ public class CarServiceImpl implements CarService {
         CarVO c=carDao.getCarVOByName(carVO.getName());
         if(null==c){
             carDao.addCarVO(carVO);
-            getIdNameMap().put(carVO.getId(),carVO);
+            getIdCarVOMap().put(carVO.getId(),carVO);
         }else {
             throw new PagePromptException(PagePromptException.ADD_INFO_REPART);
         }
@@ -62,7 +69,7 @@ public class CarServiceImpl implements CarService {
 
     public List<CarVO> listCarVOWithCarTypeNameIncludeStr(String str) {
         List<CarVO> list=new ArrayList<CarVO>();
-        for(Map.Entry<Long,CarVO> e:getIdNameMap ().entrySet()){
+        for(Map.Entry<Long,CarVO> e:getIdCarVOMap ().entrySet()){
             String carName=e.getValue().getName();
             if(carName.indexOf(str)>=0){
                 list.add(e.getValue());
@@ -96,17 +103,17 @@ public class CarServiceImpl implements CarService {
     /**
      * 设置idNameMap
      */
-    private void setIdNameMap(){
-        idNameMap=new HashMap<Long,CarVO>();
+    private void setIdCarVOMap(){
+        idCarVOMap=new HashMap<Long,CarVO>();
         List<CarVO> list=carDao.getCarVO();
         for(CarVO c:list){
-            idNameMap.put(c.getId(),c);
+            idCarVOMap.put(c.getId(),c);
         }
     }
-    private Map<Long,CarVO> getIdNameMap(){
-        if (null==idNameMap){
-            setIdNameMap();
+    private Map<Long,CarVO> getIdCarVOMap(){
+        if (null==idCarVOMap){
+            setIdCarVOMap();
         }
-        return idNameMap;
+        return idCarVOMap;
     }
 }

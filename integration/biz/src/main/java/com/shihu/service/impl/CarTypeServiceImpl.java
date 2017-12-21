@@ -4,6 +4,7 @@ import com.shihu.exception.PagePromptException;
 import com.shihu.model.common.CarType;
 import com.shihu.model.common.VO.CarTypeVO;
 import com.shihu.model.common.VO.CarVO;
+import com.shihu.model.common.VO.CustomerVO;
 import com.shihu.mybatis.dao.CarDao;
 import com.shihu.mybatis.dao.CarTypeDao;
 import com.shihu.service.CarTypeService;
@@ -25,7 +26,14 @@ public class CarTypeServiceImpl implements CarTypeService {
 
 
     public CarTypeVO getCarTypeVOByIdCache(Long id) {
-        return getIdNameMap().get(id);
+        CarTypeVO carTypeVO=getIdNameMap().get(id);
+        if(null==carTypeVO){
+            carTypeVO=carTypeDao.getCarTypeVOById(id);
+            if(null!=carTypeVO){
+                getIdNameMap().put(id,carTypeVO);
+            }
+        }
+        return carTypeVO;
     }
 
     public List<CarTypeVO> getAllCarTypeVO() {

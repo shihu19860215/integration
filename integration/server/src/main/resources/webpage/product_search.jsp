@@ -140,6 +140,7 @@
             <input type="text" name="carName" value="${carName}" class="input-small" placeholder="车型">
             <input type="text" name="productName" value="${productName}" class="input-small" placeholder="商品名">
             <input type="text" name="productVersion" value="${productVersion}" class="input-small" placeholder="型号">
+            <input type="text" name="productRemark" value="${productRemark}" class="input-small" placeholder="备注">
             <input type="submit" onclick="return tosearch()" class="btn" value="搜索"></input>
             <input type="reset" onclick="return clearAll()" class="btn" value="清除"></input>
         </form>
@@ -147,13 +148,6 @@
         </div>
     </div>
     <div class="well">
-        <!--
-        <form id="productSerachForm" action="" method="post">
-            <input type="hidden" name="carName" value="${carName}">
-            <input type="hidden" name="productName" value="${productName}">
-            <input type="hidden" name="productVersion" value="${productVersion}">
-            <input type="hidden" name="sort" value="${''==sort?'pNameAsc':sort}">
-        </form>-->
         <table class="table">
 
             <thead>

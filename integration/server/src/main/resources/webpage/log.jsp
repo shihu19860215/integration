@@ -80,8 +80,8 @@
 
             <thead>
             <tr>
-                <th>序号</th>
-                <th>时间</th>
+                <th style="width: 30px;">序号</th>
+                <th style="width: 140px;">时间</th>
                 <th>日志</th>
             </tr>
             </thead>

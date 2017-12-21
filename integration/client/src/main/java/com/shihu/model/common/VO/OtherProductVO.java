@@ -7,6 +7,7 @@ public class OtherProductVO {
     private Integer num;
     private String unit;
     private Integer price;
+    private boolean sell;
 
     public Long getId() {
         return id;
@@ -59,6 +60,15 @@ public class OtherProductVO {
 
     public OtherProductVO setPrice(Integer price) {
         this.price = price;
+        return this;
+    }
+
+    public boolean isSell() {
+        return sell;
+    }
+
+    public OtherProductVO setSell(boolean sell) {
+        this.sell = sell;
         return this;
     }
 }

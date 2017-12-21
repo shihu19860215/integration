@@ -23,7 +23,7 @@ public class CustomerController {
         HomePageBean homePageBean=new HomePageBean(index,"customer");
         modelAndView.addObject("page",homePageBean);
 
-        List<CustomerVO> list=customerService.getCustomerVOAll();
+        List<CustomerVO> list=customerService.getCustomerVODisplayAll();
         modelAndView.addObject("list",list);
 
         return  modelAndView;

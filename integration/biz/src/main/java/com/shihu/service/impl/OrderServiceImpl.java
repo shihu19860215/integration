@@ -39,29 +39,50 @@ public class OrderServiceImpl implements OrderService {
     public void addOrder(Order order) throws PagePromptException{
         if(null!=order.getCustomerVO()
                 &&null!=order.getCustomerVO().getId()
-                &&null!=order.getOrderProductVOList()
-                &&order.getOrderProductVOList().size()>0
+                &&((null!=order.getOrderProductVOList()&&order.getOrderProductVOList().size()>0)
+                ||(null!=order.getOtherProductVOList()&&order.getOtherProductVOList().size()>0))
                 ){
-            OrderVO orderVO=new OrderVO(order.getCustomerVO().getId(),order.getTotal(),order.getProductNames(),order.getRemarks());
-            orderDao.addOrderVO(orderVO);
             List<OrderProductVO> orderProductVOList=order.getOrderProductVOList();
+            List<OtherProductVO> otherProductVOList=order.getOtherProductVOList();
+            Boolean retreat=false;
+            if(null!=orderProductVOList&&orderProductVOList.size()>0){
+                for(int i=0;i<orderProductVOList.size();i++){
+                    if(!orderProductVOList.get(i).isSell()){
+                        retreat=true;
+                        break;
+                    }
+                }
+            }
+            if(!retreat&&null!=otherProductVOList&&otherProductVOList.size()>0){
+                for(int i=0;i<otherProductVOList.size();i++){
+                    if(!otherProductVOList.get(i).isSell()){
+                        retreat=true;
+                        break;
+                    }
+                }
+            }
+            OrderVO orderVO=new OrderVO(order.getCustomerVO().getId(),order.getTotal(),order.getProductNames(),order.getRemarks(),retreat);
+            orderDao.addOrderVO(orderVO);
             if(null!=orderProductVOList&&orderProductVOList.size()>0){
                 for(int i=0;i<orderProductVOList.size();i++){
                     OrderProductVO orderProductVO=orderProductVOList.get(i);
                     ProductVO productVO=productDao.getDisplayProductVOById(orderProductVO.getProductId());
-                    if(null==productVO){
-                        throw  new PagePromptException(PagePromptException.ADD_ORDER_ERROR_PRODCUT_INVAILD);
+                    if(orderProductVO.isSell()) {
+                        if (null == productVO) {
+                            throw new PagePromptException(PagePromptException.ADD_ORDER_ERROR_PRODCUT_INVAILD);
+                        }
+                        if (orderProductVO.isSell() && orderProductVO.getNum() > productVO.getNum()) {
+                            throw new PagePromptException(PagePromptException.ADD_ORDER_ERROR_PRODCUT_NUM_LESS);
+                        }
+                        productVO.setNum(productVO.getNum() - orderProductVO.getNum());
+                    }else {
+                        productVO.setNum(productVO.getNum()+ orderProductVO.getNum());
                     }
-                    if(orderProductVO.isSell()&&orderProductVO.getNum()>productVO.getNum()){
-                        throw  new PagePromptException(PagePromptException.ADD_ORDER_ERROR_PRODCUT_NUM_LESS);
-                    }
-                    productVO.setNum(productVO.getNum()-orderProductVO.getNum());
                     productDao.updateProdectNumById(productVO);
                     orderProductVO.setOrderId(orderVO.getId());
                     orderProductDao.addOrderProductVO(orderProductVO);
                 }
             }
-            List<OtherProductVO> otherProductVOList=order.getOtherProductVOList();
             if(null!=otherProductVOList&&otherProductVOList.size()>0){
                 for(int i=0;i<otherProductVOList.size();i++){
                     otherProductVOList.get(i).setOrderId(orderVO.getId());
@@ -73,7 +94,7 @@ public class OrderServiceImpl implements OrderService {
 
     public Order getOrderById(Long id) {
         OrderVO orderVO=orderDao.getOrderVOById(id);
-        CustomerVO customerVO=customerService.getCustomerVOByIdCache(orderVO.getId());
+        CustomerVO customerVO=customerService.getCustomerVOByIdCache(orderVO.getCustomerId());
         List<OrderProductAndProductVO> orderProductAndProductVOList= orderProductDao.getOrderProductAndProductVOListByOrderId(id);
         List<OtherProductVO> otherProductVOList=otherProductDao.getOtherProductVOListByOrderId(id);
         Order order=new Order(orderVO,customerVO,orderProductAndProductVOList,otherProductVOList);

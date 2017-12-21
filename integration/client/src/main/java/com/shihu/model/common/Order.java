@@ -15,6 +15,7 @@ public class Order {
     private Integer total;
     private String productNames;
     private String remarks;
+    private Boolean retreat;
     private Boolean valid;
     private String createTime;
 
@@ -88,6 +89,15 @@ public class Order {
 
     public Order setRemarks(String remarks) {
         this.remarks = remarks;
+        return this;
+    }
+
+    public Boolean getRetreat() {
+        return retreat;
+    }
+
+    public Order setRetreat(Boolean retreat) {
+        this.retreat = retreat;
         return this;
     }
 

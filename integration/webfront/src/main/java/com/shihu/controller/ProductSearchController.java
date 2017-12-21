@@ -22,7 +22,7 @@ public class ProductSearchController {
     private ProductService productService;
 
     @RequestMapping("")
-    public ModelAndView productSearch(String carName,String productName,String productVersion,String sort){
+    public ModelAndView productSearch(String carName,String productName,String productVersion,String productRemark,String sort){
         ModelAndView modelAndView=new ModelAndView("home");
         HomePageBean homePageBean=new HomePageBean(searchProductIndex,"product_search");
         modelAndView.addObject("page",homePageBean);
@@ -38,10 +38,13 @@ public class ProductSearchController {
             if(null!=productVersion&&productVersion.length()>0){
                 modelAndView.addObject("productVersion",productVersion);
             }
+            if(null!=productRemark&&productRemark.length()>0){
+                modelAndView.addObject("productRemark",productRemark);
+            }
             if(null!=sort&&sort.length()>0){
                 modelAndView.addObject("sort",sort);
             }
-            List<Product> products=productService.searchProduct(carName,productName,productVersion,sort);
+            List<Product> products=productService.searchProduct(carName,productName,productVersion,productRemark,sort);
             modelAndView.addObject("products",products);
         }
         return  modelAndView;

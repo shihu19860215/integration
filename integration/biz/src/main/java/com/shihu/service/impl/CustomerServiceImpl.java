@@ -17,12 +17,24 @@ public class CustomerServiceImpl implements CustomerService {
     private Map<Long,CustomerVO> idCustomerVOMap;
     @Autowired
     private CustomerDao customerDao;
-    public List<CustomerVO> getCustomerVOAll() {
-        return customerDao.getCustomerVOAll();
+    public List<CustomerVO> getCustomerVODisplayAll() {
+        return customerDao.getCustomerVODisplayAll();
     }
 
     @Transactional
     public void addCustomerVO(CustomerVO customerVO) {
+        if(null!=customerVO.getTelephone()&&customerVO.getTelephone().trim().length()==0){
+            customerVO.setTelephone(null);
+        }
+        if(null!=customerVO.getTelephone2()&&customerVO.getTelephone2().trim().length()==0){
+            customerVO.setTelephone2(null);
+        }
+        if(null!=customerVO.getArea()&&customerVO.getArea().trim().length()==0){
+            customerVO.setArea(null);
+        }
+        if(null!=customerVO.getAddress()&&customerVO.getAddress().trim().length()==0){
+            customerVO.setAddress(null);
+        }
         customerDao.addCustomerVO(customerVO);
         getIdCustomerVOMap().put(customerVO.getId(),customerVO);
     }
@@ -35,16 +47,22 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Transactional
     public void delCustomerVO(Long id) {
-        customerDao.delCustomerById(id);
-        getIdCustomerVOMap().remove(id);
+        customerDao.unDisplayCustomerVO(id);
     }
 
     public CustomerVO getCustomerVOByIdCache(Long id) {
-        return getIdCustomerVOMap().get(id);
+        CustomerVO customerVO=getIdCustomerVOMap().get(id);
+        if(null==customerVO){
+            customerVO=customerDao.getCustomerVOById(id);
+            if(null!=customerVO){
+                getIdCustomerVOMap().put(id,customerVO);
+            }
+        }
+        return customerVO;
     }
 
-    public List<CustomerVO> getCustomerVOIdNameListLikeName(String name) {
-        return customerDao.getCustomerVOIdNameListLikeName("%"+name+"%");
+    public List<CustomerVO> getCustomerVOListLikeNameOrTel(String customerNameOrTel) {
+        return customerDao.getCustomerVOListLikeNameOrTel("%"+customerNameOrTel+"%");
     }
 
     /**

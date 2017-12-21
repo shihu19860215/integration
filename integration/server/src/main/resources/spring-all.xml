@@ -23,8 +23,6 @@
     <!-- mybatis -->
     <import resource="classpath:/mybatis/mybatis.xml" />
 
-    <!-- spring redis -->
-    <import resource="classpath:/redis/spring-redis.xml" />
 
     <!-- spring mvc
     <import resource="classpath:/mvc/spring-mvc.xml" />-->

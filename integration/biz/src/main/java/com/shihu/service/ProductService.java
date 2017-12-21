@@ -21,7 +21,7 @@ public interface ProductService {
     public void updateProduct(ProductVO productVO,Long[] carIds);
     public void updateProduct(ProductVO productVO,String[] carIds);
     public void delProduct(Long id);
-    public List<Product> searchProduct(String carName,String productName,String productVersion,String sort);
+    public List<Product> searchProduct(String carName,String productName,String productVersion,String productRemarks,String sort);
 
 
 

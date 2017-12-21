@@ -1,6 +1,6 @@
 增加product display字段
-增加car_product id字段
 增加product carstr字段
+增加car_product id字段 先添加字段  在设置自增并为主键
 
 /*
 查询商品不显示后没有被删除的商品汽车联系表
@@ -10,8 +10,12 @@ delete from car_product where id in
 (select a.id from (select cp.id from car_product as cp join product p on cp.productId=p.id where p.display=false) a);
 */
 
-在数据库手动添加一个(个人客户),ID 为1 name为个人
+增加导入没有的表
+TRUNCATE TABLE customer;
+TRUNCATE TABLE order_;
+TRUNCATE TABLE order_product;
+TRUNCATE TABLE other_product;
+在数据库手动添加一个(个人客户),ID 为1 name为个人,display为0
+
 
 数据库log 修改time 字段为createtime
-增加order_ order_product表
-重新导入权限 用户 组表

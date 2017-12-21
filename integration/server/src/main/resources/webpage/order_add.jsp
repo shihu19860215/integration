@@ -3,21 +3,28 @@
 <script type="text/javascript">
 
     $(function () {
-        $("#customerName").keyup(function () {
+        $("#customerNameOrTel").keyup(function () {
             loadCustomer();
         });
     });
 
     var loadCustomer=function(){
-        var customerName = $("#customerName").val();
-        if ("" != customerName) {
+        var customerNameOrTel = $("#customerNameOrTel").val();
+        if ("" != customerNameOrTel) {
             $.post("/ajax/customer/saerchlikename",
-                {'customerName': customerName},
+                {'customerNameOrTel': customerNameOrTel},
                 function (data) {
                     if (null != data) {
                         var tmp="<option value='1'>个人</option>";
                         for (var i = 0; i < data.length; i++) {
-                            tmp += "<option value='" + data[i].id + "'>" + data[i].name + "</option>";
+                            var str=data[i].name;
+                            if(null!=data[i].area&&""!=data[i].area.trim()){
+                                str=data[i].area+"-"+str;
+                            }
+                            if(null!=data[i].telephone&&""!=data[i].telephone.trim()){
+                                str=str+"-"+data[i].telephone;
+                            }
+                            tmp += "<option value='" + data[i].id + "'>" + str + "</option>";
                         }
                         ;
                         $("#customerId").html(tmp);
@@ -54,17 +61,33 @@
 
     var addOtherProduct=function () {
         $("#tbody2").append("<tr><td><input type=\"text\" name=\"otherProductName\" style=\"width:300px;\"></td>" +
-            "                    <td><input type=\"text\" name=\"otherProductNum\" style=\"width:30px;\"></td>" +
-            "                    <td><input type=\"text\" name=\"otherProductUnit\" style=\"width:30px;\"></td>" +
-            "                    <td><input type=\"text\" name=\"otherProductPrice\" style=\"width:50px;\"></td>" +
-            "                    <td>" +
-            "                        <a onclick=\"delOtherProduct(this)\" role=\"button\"" +
-            "                           data-toggle=\"modal\">" +
-            "                            <i class=\"icon-remove\"></i>" +
-            "                        </a>" +
-            "                    </td></tr>");
+                                "<td><input type=\"text\" name=\"otherProductNum\" style=\"width:30px;\"></td>" +
+            "<td><input type=\"text\" name=\"otherProductUnit\" style=\"width:30px;\"></td>" +
+            "<td><input type=\"text\" name=\"otherProductPrice\" style=\"width:50px;\"></td><td></td>" +
+             "<td ><select style=\"width: 65px;\">\n" +
+            "<option value=\"true\">售货</option>\n" +
+            "<option value=\"false\">退换</option>\n" +
+            "</select>"+
+            "<td>" +
+            "<a onclick=\"delOtherProduct(this)\" role=\"button\"" +
+            "data-toggle=\"modal\">" +
+            "<i class=\"icon-remove\"></i>" +
+            "</a>" +
+            "</td></tr>");
     }
-    
+
+    var validate =function(){
+        var inputObjs=$("#tbody2 input");
+        for(var i=0;i<inputObjs.length;i++){
+            var inputObj=$(inputObjs[i]);
+            if(null==inputObj.val()||""==inputObj.val().trim()){
+                alert("数据未填写完整");
+                return false;
+            }
+        }
+        return true;
+    }
+
     var subCount = function (obj) {
         var spanObj=$(obj).prev();
         var max=parseInt(spanObj.attr("max"));
@@ -75,6 +98,9 @@
     }
 
     var addOrder = function (carId) {
+        if(!validate()){
+            return false;
+        }
         $.post("/ajax/order/add",
             getPostData(),
             function (data) {
@@ -91,6 +117,9 @@
     }
 
     var saveOrder=function(){
+        if(!validate()){
+            return false;
+        }
         $.post("/ajax/order/save",
             getPostData(),
             function (data) {
@@ -139,13 +168,13 @@
                 result[otherProductVOList+'.unit']=unit;
                 result[otherProductVOList+'.price']=price;
                 productNames=productNames+name+",";
+                result[otherProductVOList+'.sell']=trObj.find("select").val();
             }
 
         }
         result.productNames=productNames.substr(0,productNames.length-1);
-        var total=countTotal();
-        if(total>0){
-            result.total=total;
+        if(countTotal()){
+            result.total=$("#totalH1").html().split(":")[1];
         }
         if(""!=$("#remarks").val()){
             result.remarks=$("#remarks").val();
@@ -154,23 +183,29 @@
     }
 
     var showTotal=function () {
-        if(countTotal()<0){
+        if(!countTotal()){
             alert("数量价格非法或为空");
         }
     }
 
-    var  countTotal=function(){;
+    var  countTotal=function(){
+        var result=true;
         var count=0;
-        var trObjs=$("#tbody tr")
+        var trObjs=$("#tbody tr");
         for(var i=0;i<trObjs.length;i++){
             var trObj=$(trObjs[i]);
             var num=parseInt(trObj.find("span").html());
             var price=parseInt(trObj.find("#price").val());
+            $(trObj.find("td")[4]).html(num*price);
             if(!isNaN(num)&&num>0&&!isNaN(price)&&price>0){
-                count=count+num*price;
+                if("true"==trObj.find("select").val()){
+                    count=count+num*price;
+                }else{
+                    count=count-num*price;
+                }
+                $(trObj.find("td")[4]).html(num*price);
             }else {
-                $("#totalH1").html("总价:");
-                return -1;
+                result=false;
             }
         }
         trObjs=$("#tbody2 tr");
@@ -179,14 +214,23 @@
             var num=parseInt(trObj.find("input[name='otherProductNum']").val());
             var price=parseInt(trObj.find("input[name='otherProductPrice']").val());
             if(!isNaN(num)&&num>0&&!isNaN(price)&&price>0){
-                count=count+num*price;
+                if("true"==trObj.find("select").val()){
+                    count=count+num*price;
+                }else{
+                    count=count-num*price;
+                }
+                $(trObj.find("td")[4]).html(num*price);
             }else {
-                $("#totalH1").html("总价:");
-                return -1;
+                result= false;
             }
         }
-        $("#totalH1").html("总价:"+count);
-        return count;
+        if(result){
+            $("#totalH1").html("总价:"+count);
+            return true;
+        }else {
+            $("#totalH1").html("总价:");
+            return false;
+        }
     }
 </script>
 
@@ -194,15 +238,15 @@
 <div>
 
     <div class="btn-toolbar">
-        <input type="text" id="customerName" class="input-small" placeholder="客户名">
+        <input type="text" id="customerNameOrTel" class="input-small" placeholder="客户名"  style="width:90px;">
         <c:choose>
             <c:when test="${null!=order.customerVO}">
-                <select id="customerId">
-                    <option value="${order.customerVO.id}">${order.customerVO.name}</option>
+                <select style="width: 280px;" id="customerId">
+                    <option value="${order.customerVO.id}">${null!=order.customerVO.area?order.customerVO.area.concat("-"):""}${order.customerVO.name}${null!=order.customerVO.telephone?"-".concat(order.customerVO.telephone):""}</option>
                 </select>
             </c:when>
             <c:otherwise>
-                <select id="customerId">
+                <select style="width: 280px;" id="customerId">
                     <option value="1">个人</option>
                 </select>
             </c:otherwise>
@@ -228,6 +272,7 @@
                 <th>个数</th>
                 <th>通用车型</th>
                 <th>单价</th>
+                <th>价格</th>
                 <th>销售</th>
                 <th>操作</th>
             </tr>
@@ -237,7 +282,7 @@
                 <tr>
                     <input type="hidden" id="productId" value="${productList[index.index].id}"/>
                     <td id="productName">${productList[index.index].name}</td>
-                    <td>${productList[index.index].version}</td>
+                    <td>${productList[index.index].version}${productList[index.index].remark}</td>
                     <td>
                         <c:if test="${null!=user && user.hasAuthority('ProductAjaxController:addNum')}">
                             <a onclick="addCount(this)">
@@ -253,9 +298,10 @@
                     </td>
                     <th id="carstrs"><c:forEach items="${productList[index.index].carVOs}" var="car">${car.name} </c:forEach></th>
                     <td><input id="price" type="text" value="${orderProductVO.price}" style="width: 40px;"/></td>
+                    <td>${orderProductVO.num*orderProductVO.price}</td>
                     <td ><select style="width: 65px;">
                         <option value="true">售货</option>
-                        <option value="false"<c:if test="${!orderProductVO.sell}"> selected = "selected"</c:if>>换货</option>
+                        <option value="false"<c:if test="${!orderProductVO.sell}"> selected = "selected"</c:if>>退换</option>
                     </select>
                      </td>
                     <td>
@@ -283,6 +329,8 @@
                 <th>个数</th>
                 <th>单位</th>
                 <th>单价</th>
+                <th>价格</th>
+                <th>销售</th>
                 <th>操作</th>
             </tr>
             </thead>
@@ -293,6 +341,11 @@
                     <td><input type="text" name="otherProductNum" value="${otherProductVO.num}" style="width:30px;"></td>
                     <td><input type="text" name="otherProductUnit" value="${otherProductVO.unit}" style="width:30px;"></td>
                     <td><input type="text" name="otherProductPrice" value="${otherProductVO.price}" style="width:50px;"></td>
+                    <td>${otherProductVO.num*otherProductVO.price}</td>
+                    <td ><select style="width: 65px;">
+                        <option value="true">售货</option>
+                        <option value="false"<c:if test="${!otherProductVO.sell}"> selected = "selected"</c:if>>退换</option>
+                    </select>
                     <td>
                         <a onclick="delOtherProduct(this)" role="button"
                            data-toggle="modal">
@@ -318,7 +371,7 @@
     </div>
     <div class="btn-toolbar">
         <h1 id="totalH1" style="font-size: 25px">总价:${order.total}</h1>
-        <button onclick="showTotal()">计算总价</button><br><br>
+        <button onclick="showTotal()">计算</button><br><br>
         <h1 style="font-size: 25px">备注:</h1>
     </div>
     <form class="bs-docs-example form-inline">

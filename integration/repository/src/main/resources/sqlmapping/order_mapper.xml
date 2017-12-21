@@ -15,6 +15,9 @@
 		<if test="productName!=null and ''!=productName">
 			and productnames like concat('%',#{productName},'%')
 		</if>
+		<if test="retreat==true">
+			and retreat=true
+		</if>
 		<if test="start!=null">
 			<![CDATA[ and createtime > #{start} ]]>
 		</if>
@@ -32,6 +35,9 @@
 		<if test="productName!=null and ''!=productName">
 			and productnames like concat('%',#{productName},'%')
 		</if>
+		<if test="retreat==true">
+			and retreat=true
+		</if>
 		<if test="start!=null">
 			<![CDATA[ and createtime > #{start} ]]>
 		</if>
@@ -42,7 +48,7 @@
 
 
 	<insert id="addOrderVO" parameterType="com.shihu.model.common.VO.OrderVO" useGeneratedKeys="true" keyProperty="id">
-		insert into order_(customerid,total,productnames,remarks,valid,createtime) values(#{customerId},#{total},#{productNames},#{remarks},true,now())
+		insert into order_(customerid,total,productnames,remarks,retreat,valid,createtime) values(#{customerId},#{total},#{productNames},#{remarks},#{retreat},true,now())
 	</insert>
 	<update id="updateOrderRemarks" parameterType="com.shihu.model.common.VO.OrderVO">
 		update order_ set remarks=#{remarks} where id=#{id}

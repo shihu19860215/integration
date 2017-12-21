@@ -37,6 +37,9 @@
 		<if test="version!=null">
 			and p.version like #{version}
 		</if>
+		<if test="remark!=null">
+			and p.remark like #{remark}
+		</if>
 		group by p.id
 		<if test="sort!= null" >
 			order by

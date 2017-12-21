@@ -208,7 +208,7 @@ public class ProductServiceImpl implements ProductService{
         logDao.addLog(new LogVO("删除商品:"+new Product(productVO).toLog()));
     }
 
-    public List<Product> searchProduct(String carName,String productName,String productVersion,String sort){
+    public List<Product> searchProduct(String carName,String productName,String productVersion,String productRemark,String sort){
         Map<String,String> map=new HashMap<String,String>();
         if(null!=carName&&carName.length()>0){
             map.put("carName","%"+carName+"%");
@@ -218,6 +218,9 @@ public class ProductServiceImpl implements ProductService{
         }
         if(null!=productVersion&&productVersion.length()>0){
             map.put("version","%"+productVersion+"%");
+        }
+        if(null!=productRemark&&productRemark.length()>0){
+            map.put("remark","%"+productRemark+"%");
         }
         if(null!=sort&&sort.length()>0){
             map.put("sort",sort);

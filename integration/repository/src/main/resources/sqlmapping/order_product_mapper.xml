@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.shihu.mybatis.dao.OrderProductDao">
 	<select id="getOrderProductAndProductVOListByOrderId" parameterType="long" resultType="com.shihu.model.common.VO.OrderProductAndProductVO">
-		select * from order_product as op join product as p on p.id=op.productid where orderId=#{id}
+		select op.num num,op.price price,op.sell sell,p.name name,concat(p.version,p.remark) version,p.carstr carStr from order_product as op join product as p on p.id=op.productid where orderId=#{id}
 	</select>
 
 	<insert id="addOrderProductVO" parameterType="com.shihu.model.common.VO.OrderProductVO">
