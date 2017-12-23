@@ -1,6 +1,8 @@
 package com.shihu.model.common.VO;
 
-public class CustomerVO {
+import java.io.Serializable;
+
+public class CustomerVO implements Serializable{
     private Long id;
     private String name;
     private String telephone;

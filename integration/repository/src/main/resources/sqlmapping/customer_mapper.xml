@@ -17,7 +17,7 @@
 	</select>
 
 
-	<insert id="addCustomerVO" parameterType="com.shihu.model.common.VO.CarVO">
+	<insert id="addCustomerVO" parameterType="com.shihu.model.common.VO.CarVO" useGeneratedKeys="true" keyProperty="id">>
 		insert into customer(name,telephone,telephone2,area,address,display) values(#{name},#{telephone},#{telephone2},#{area},#{address},true)
 	</insert>
 	<update id="updateCustomerVO" parameterType="com.shihu.model.common.VO.CustomerVO">
