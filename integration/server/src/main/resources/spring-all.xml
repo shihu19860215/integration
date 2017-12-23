@@ -15,6 +15,7 @@
     <context:component-scan base-package="com.shihu.mybatis.dao"/>
 
     <context:component-scan base-package="com.shihu.service"/>
+    <context:component-scan base-package="com.shihu.redis"/>
     <context:component-scan base-package="com.shihu.interceptor"/>
 
 <!-- datasource -->
