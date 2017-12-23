@@ -41,7 +41,7 @@
 
     </properties>
     <dependencyManagement>
-        <dependencies>
+        <dependencies><!-- https://mvnrepository.com/artifact/net.sf.ehcache/ehcache -->
             <dependency>
                 <groupId>com.shihu</groupId>
                 <artifactId>com.shihu.webfront</artifactId>

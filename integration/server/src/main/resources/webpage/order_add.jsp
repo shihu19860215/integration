@@ -260,7 +260,7 @@
         <div class="btn-group">
         </div>
     </div>
-    <div class="well">
+    <div class="well" style="display: none;">
         <ul class="breadcrumb" style="width: 58px;">
             <li class="active">专用商品</li>
         </ul>

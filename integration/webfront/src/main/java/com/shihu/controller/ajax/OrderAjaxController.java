@@ -101,6 +101,7 @@ public class OrderAjaxController {
 
     @RequestMapping("/add")
     public void add(HttpSession session,HttpServletResponse response,Order order){
+        order.setOrderProductVOList(null);
         AjaxResult ajaxResult=new AjaxResult();
         PagePromptException pagePromptException=null;
         try {

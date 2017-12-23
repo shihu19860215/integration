@@ -65,7 +65,7 @@
                 str=str+"<li class=\"active\"><a>...</a></li>";
             }
             var startnum;
-            if(page<=maxlength/2){
+            if(page <=maxlength||page<=maxlength/2){
                 startnum=1;
             }else if(page>=length-maxlength/2){
                 startnum=length-maxlength+1;
